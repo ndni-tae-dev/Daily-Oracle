@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หลังบ้าน - จัดการสต็อกเซียมซี</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #1E1B2E 0%, #2D2A44 100%);
+            min-height: 100vh;
+        }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-6">
+
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">🔐 หลังบ้านเซียมซี</h1>
+            <p class="text-purple-200">จัดการสต็อกสินค้าแจกและรีเซ็ตระบบ</p>
+        </div>
+
+        <!-- PIN Protection -->
+        <div id="pin-screen" class="bg-white/10 backdrop-blur rounded-2xl p-8 shadow-2xl border border-white/20">
+            <div class="text-center">
+                <div class="text-5xl mb-4">🔒</div>
+                <h2 class="text-2xl font-bold text-white mb-2">กรอกรหัสผ่าน</h2>
+                <p class="text-purple-200 text-sm mb-6">เฉพาะทีมงานเท่านั้นที่เข้าถึงได้</p>
+                <input type="password" id="pin-input" class="bg-white/20 text-white text-center text-2xl tracking-widest rounded-xl px-6 py-3 w-48 mx-auto block border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400" maxlength="4" placeholder="****">
+                <button onclick="checkPin()" class="mt-6 bg-purple-500 hover:bg-purple-600 text-white font-bold px-8 py-3 rounded-xl transition-all duration-200 shadow-lg">
+                    เข้าสู่ระบบ
+                </button>
+                <p id="pin-error" class="text-red-300 text-sm mt-4 hidden">❌ รหัสไม่ถูกต้อง ลองอีกครั้ง</p>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard (Hidden until PIN success) -->
+        <div id="admin-dashboard" class="hidden">
+            <!-- สถานะผู้เล่นปัจจุบัน -->
+            <div class="bg-white/10 backdrop-blur rounded-2xl p-6 mb-6 border border-white/20">
+                <div class="flex justify-between items-center flex-wrap gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white mb-1">👤 สถานะผู้เล่นปัจจุบัน</h2>
+                        <p id="player-status" class="text-purple-200 text-sm">กำลังตรวจสอบ...</p>
+                    </div>
+                    <button onclick="resetPlayer()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3 rounded-xl transition-all duration-200 shadow-lg flex items-center gap-2">
+                        🔄 รีเซ็ตให้คนถัดไปเล่น
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stock Management -->
+            <div class="bg-white/10 backdrop-blur rounded-2xl p-6 mb-6 border border-white/20">
+                <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">📦 จัดการสต็อกของแจกจริง</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="stock-list">
+                    <!-- Dynamic stock items will appear here -->
+                </div>
+                <div class="mt-6 pt-4 border-t border-white/20 flex justify-between items-center flex-wrap gap-3">
+                    <div class="text-white">
+                        <span class="text-sm text-purple-200">รวมของแจกจริงคงเหลือ:</span>
+                        <span id="total-stock" class="text-2xl font-bold text-white ml-2">0</span>
+                        <span class="text-sm text-purple-200">ชิ้น</span>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="resetAllStock()" class="bg-red-500/80 hover:bg-red-600 text-white px-5 py-2 rounded-lg transition-all text-sm">
+                            🗑️ รีเซ็ตสต็อกเป็นค่าตั้งต้น
+                        </button>
+                        <button onclick="refreshStockDisplay()" class="bg-blue-500/80 hover:bg-blue-600 text-white px-5 py-2 rounded-lg transition-all text-sm">
+                            🔄 รีเฟรช
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Virtual Items Info -->
+            <div class="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20">
+                <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">✨ ไอเทมเสมือน (สำรอง)</h2>
+                <p class="text-purple-200 text-sm mb-4">เมื่อของแจกจริงหมด ระบบจะสุ่มไอเทมเหล่านี้ให้อัตโนมัติ</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="bg-white/5 rounded-xl p-3 text-center">
+                        <div class="text-3xl mb-1">💪</div>
+                        <div class="text-white font-medium">กำลังใจดีๆ</div>
+                        <div class="text-purple-300 text-xs">ไม่มีสต็อกจำกัด</div>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-3 text-center">
+                        <div class="text-3xl mb-1">😊</div>
+                        <div class="text-white font-medium">รอยยิ้มสดใส</div>
+                        <div class="text-purple-300 text-xs">ไม่มีสต็อกจำกัด</div>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-3 text-center">
+                        <div class="text-3xl mb-1">🧘</div>
+                        <div class="text-white font-medium">สมาธิจดจ่อ</div>
+                        <div class="text-purple-300 text-xs">ไม่มีสต็อกจำกัด</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="mt-6 text-center text-purple-300 text-xs">
+                💡 เคล็ดลับ: หลังจากรีเซ็ตให้คนถัดไปแล้ว ให้แจ้งผู้เล่นคนใหม่ว่า "กดที่กระบอกเซียมซีได้เลย"
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PIN รหัสผ่าน (เปลี่ยนได้ตามต้องการ)
+        const ADMIN_PIN = "1234";
+
+        // ข้อมูลไอเทมสำหรับแสดง
+        const itemNames = {
+            1: "หน้ากากอนามัย",
+            2: "Shopping Bag", 
+            3: "สมุดโน้ต",
+            4: "Gift Set",
+            5: "ทิชชูเปียก",
+            6: "ทิชชูพกพา"
+        };
+
+        // ฟังก์ชันจัดการสต็อก
+        function getStock() {
+            const saved = localStorage.getItem('physical_stock');
+            if (saved) {
+                return JSON.parse(saved);
+            }
+            return { 1: 10, 2: 9, 3: 8, 4: 7, 5: 6, 6: 5 };
+        }
+
+        function saveStock(stock) {
+            localStorage.setItem('physical_stock', JSON.stringify(stock));
+        }
+
+        function updateStock(itemId, newAmount) {
+            const stock = getStock();
+            const amount = parseInt(newAmount);
+            if (isNaN(amount) || amount < 0) return;
+            stock[itemId] = amount;
+            saveStock(stock);
+            refreshStockDisplay();
+        }
+
+        function refreshStockDisplay() {
+            const stock = getStock();
+            const container = document.getElementById('stock-list');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            let total = 0;
+            
+            for (let i = 1; i <= 6; i++) {
+                const amount = stock[i] || 0;
+                total += amount;
+                container.innerHTML += `
+                    <div class="bg-white/5 rounded-xl p-4 border border-white/10">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-white font-bold text-lg">${i}. ${itemNames[i]}</span>
+                            <span class="text-xs px-2 py-1 rounded-full ${amount > 0 ? 'bg-green-500/30 text-green-200' : 'bg-red-500/30 text-red-200'}">
+                                ${amount > 0 ? '✅ มีสต็อก' : '❌ หมด'}
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button onclick="updateStock(${i}, ${amount - 1})" class="bg-white/20 hover:bg-white/30 text-white w-8 h-8 rounded-full flex items-center justify-center transition-all ${amount <= 0 ? 'opacity-50 cursor-not-allowed' : ''}" ${amount <= 0 ? 'disabled' : ''}>-</button>
+                            <input type="number" id="stock-${i}" value="${amount}" onchange="updateStock(${i}, this.value)" class="bg-white/20 text-white text-center rounded-lg w-20 py-2 border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                            <button onclick="updateStock(${i}, ${amount + 1})" class="bg-white/20 hover:bg-white/30 text-white w-8 h-8 rounded-full flex items-center justify-center transition-all">+</button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('total-stock').innerText = total;
+            
+            // อัพเดทสถานะของจริงหมดหรือยัง
+            const hasStock = total > 0;
+            const warningMsg = document.getElementById('stock-warning-msg');
+            if (warningMsg) {
+                if (!hasStock) {
+                    warningMsg.innerHTML = '<span class="text-amber-300">⚠️ เตือน: ของแจกจริงหมดแล้ว ผู้เล่นจะได้รับไอเทมเสมือนแทน</span>';
+                } else {
+                    warningMsg.innerHTML = '';
+                }
+            }
+        }
+
+        function resetAllStock() {
+            const defaultStock = { 1: 10, 2: 9, 3: 8, 4: 7, 5: 6, 6: 5 };
+            saveStock(defaultStock);
+            refreshStockDisplay();
+        }
+
+        function resetPlayer() {
+            localStorage.removeItem('seamsi_result');
+            localStorage.removeItem('seamsi_timestamp');
+            const playerStatus = document.getElementById('player-status');
+            if (playerStatus) {
+                playerStatus.innerHTML = '✅ รีเซ็ตเรียบร้อยแล้ว! ผู้เล่นคนถัดไปสามารถกดเสี่ยงทายได้';
+                playerStatus.className = 'text-green-300 text-sm';
+            }
+            setTimeout(() => {
+                updatePlayerStatus();
+            }, 3000);
+            updatePlayerStatus();
+        }
+
+        function updatePlayerStatus() {
+            const savedResult = localStorage.getItem('seamsi_result');
+            const playerStatus = document.getElementById('player-status');
+            if (!playerStatus) return;
+            
+            if (savedResult) {
+                const timestamp = localStorage.getItem('seamsi_timestamp');
+                const date = timestamp ? new Date(parseInt(timestamp)).toLocaleTimeString('th-TH') : 'ไม่ทราบเวลา';
+                playerStatus.innerHTML = `🎲 ผู้เล่นได้ทำการสุ่มไปแล้ว (หมายเลข ${savedResult}) เมื่อ ${date} — ยังไม่สามารถสุ่มซ้ำได้`;
+                playerStatus.className = 'text-amber-200 text-sm';
+            } else {
+                playerStatus.innerHTML = '✨ พร้อมให้สุ่ม! ยังไม่มีผู้เล่นคนไหนสุ่มในเซสชันนี้';
+                playerStatus.className = 'text-green-200 text-sm';
+            }
+        }
+
+        // PIN Functions
+        function checkPin() {
+            const pinInput = document.getElementById('pin-input').value;
+            if (pinInput === ADMIN_PIN) {
+                document.getElementById('pin-screen').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                refreshStockDisplay();
+                updatePlayerStatus();
+                
+                // เพิ่ม warning message ใน stock section
+                const stockSection = document.querySelector('#admin-dashboard .bg-white\\/10:first-child');
+                if (stockSection && !document.getElementById('stock-warning-msg')) {
+                    const warningDiv = document.createElement('div');
+                    warningDiv.id = 'stock-warning-msg';
+                    warningDiv.className = 'mt-3 text-center text-sm';
+                    stockSection.appendChild(warningDiv);
+                }
+            } else {
+                document.getElementById('pin-error').classList.remove('hidden');
+                document.getElementById('pin-input').value = '';
+                document.getElementById('pin-input').focus();
+            }
+        }
+
+        // ตรวจสอบสถานะเมื่อโหลด
+        document.addEventListener('DOMContentLoaded', () => {
+            // ตั้งค่าเริ่มต้นถ้ายังไม่มี
+            if (!localStorage.getItem('physical_stock')) {
+                resetAllStock();
+            }
+        });
+    </script>
+</body>
+</html>
