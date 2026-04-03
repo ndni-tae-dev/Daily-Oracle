@@ -220,10 +220,55 @@
         </div>
     </div>
 
+    <!-- Out of Stock Modal -->
+    <div id="out-of-stock-modal" class="fixed inset-0 bg-blue-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center transition-opacity duration-300">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl">
+            <div class="text-6xl mb-4">📦</div>
+            <h3 class="text-2xl font-bold text-blue-900 mb-2">ของแจกหมดแล้ว!</h3>
+            <p class="text-gray-600 mb-6 text-sm">ขออภัยด้วยครับ ไอเทมของแจกทั้งหมดได้ถูกแจกออกไปจนหมดสต็อกแล้ว</p>
+            <button onclick="closeOutOfStockModal()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-md transition-all">
+                ตกลง
+            </button>
+        </div>
+    </div>
+
+    <!-- Stock Viewer Modal (For Staff) -->
+    <div id="stock-modal" class="fixed inset-0 bg-blue-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center transition-opacity duration-300">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-3 mb-3">
+                <h3 class="text-xl font-bold text-blue-900">📊 สต็อกของแจกคงเหลือ</h3>
+                <button onclick="closeStockModal()" class="text-gray-400 hover:text-gray-600 font-bold text-xl">✕</button>
+            </div>
+            <div id="stock-list" class="space-y-3 text-sm text-gray-700">
+                <!-- Data populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin / Staff Controls (มุมขวาล่าง) -->
+    <div class="fixed bottom-4 right-4 z-20 flex flex-col gap-2">
+        <button onclick="showStock()" class="bg-white/80 backdrop-blur text-blue-800 text-xs px-3 py-2 rounded-full shadow border border-blue-200 hover:bg-white transition-all text-left">
+            📊 ดูสต็อกคงเหลือ
+        </button>
+        <button onclick="resetForNextPlayer()" class="bg-white/80 backdrop-blur text-blue-800 text-xs px-3 py-2 rounded-full shadow border border-blue-200 hover:bg-white transition-all text-left">
+            🔄 รีเซ็ตให้คนถัดไปเล่น
+        </button>
+    </div>
+
     <!-- Data & Logic -->
     <script>
         // State
         let isAnimating = false;
+
+        // Inventory State (สต็อกของแจก)
+        let itemStock = {
+            1: 10, // หน้ากากอนามัย
+            2: 9,  // Shopping Bag
+            3: 8,  // สมุดโน้ต
+            4: 7,  // Gift Set
+            5: 6,  // ทิชชูเปียก
+            6: 5   // ทิชชูพกพา
+        };
 
         // Prophecy Data (1-6) Items & Insights
         const prophecies = {
@@ -260,7 +305,7 @@
                 tips: "ลองเขียนโน้ตเล็ก ๆ แนบไป จะเพิ่มคุณค่าทางใจมากขึ้น"
             },
             5: {
-                item: "ทิชชูเปียก(ขนาดเล็ก)",
+                item: "ทิชชูเปียก (ขนาดเล็ก)",
                 prophecy: "“วันนี้คุณมีเกณฑ์ต้องลุย เดินทาง หรือเจอสถานการณ์ที่ไม่สะดวกสบาย”",
                 insight: "การสัมผัสพื้นผิวสาธารณะ เช่น ราวจับ โต๊ะ หรือเงินสด อาจมีเชื้อโรคสะสม",
                 reason: "ทิชชูเปียกช่วยทำความสะอาดมือและพื้นผิวได้ทันที",
@@ -287,14 +332,25 @@
             }
         });
 
+        // ดึงรายการไอเทมที่ยังมีสต็อกเหลือ
+        function getAvailableItems() {
+            return Object.keys(itemStock).filter(key => itemStock[key] > 0);
+        }
+
         function shakeCylinder() {
             if(isAnimating) return;
 
             // ตรวจสอบว่าเคยสุ่มไปแล้วหรือไม่
             const savedResult = localStorage.getItem('seamsi_result');
             if (savedResult) {
-                // ถ้าเคยสุ่มแล้ว ให้โชว์ผลลัพธ์เดิมทันทีโดยไม่ต้องเขย่าใหม่
                 showResultModal(savedResult);
+                return;
+            }
+
+            // ตรวจสอบว่าของแจกหมดหรือยัง
+            const available = getAvailableItems();
+            if (available.length === 0) {
+                document.getElementById('out-of-stock-modal').classList.remove('hidden');
                 return;
             }
 
@@ -313,8 +369,13 @@
             setTimeout(() => {
                 cylinder.classList.remove('shake-active');
                 
-                // Pick a random number 1-6
-                const resultNumber = Math.floor(Math.random() * 6) + 1;
+                // สุ่มจากรายการที่ยังมีสต็อกเหลืออยู่เท่านั้น
+                const randomIndex = Math.floor(Math.random() * available.length);
+                const resultNumber = available[randomIndex];
+                
+                // หักสต็อก
+                itemStock[resultNumber]--;
+
                 document.getElementById('falling-number').innerText = resultNumber;
 
                 // บันทึกผลลัพธ์ลงในเครื่องผู้เล่น
@@ -365,6 +426,58 @@
             modal.classList.add('hidden');
             modal.classList.remove('modal-active');
             isAnimating = false;
+        }
+
+        function closeOutOfStockModal() {
+            document.getElementById('out-of-stock-modal').classList.add('hidden');
+        }
+
+        // ==========================================
+        // Admin / Staff Functions
+        // ==========================================
+
+        function resetForNextPlayer() {
+            localStorage.removeItem('seamsi_result');
+            const instruction = document.getElementById('instruction-text');
+            instruction.innerText = '✨ กดเพื่อเขย่าเลย! ✨';
+            instruction.classList.add('animate-bounce');
+            
+            // Visual feedback
+            instruction.style.transform = 'translateX(-50%) scale(1.1)';
+            setTimeout(() => {
+                instruction.style.transform = 'translateX(-50%) scale(1)';
+            }, 200);
+        }
+
+        function showStock() {
+            const stockList = document.getElementById('stock-list');
+            stockList.innerHTML = '';
+            let total = 0;
+            
+            for (let i = 1; i <= 6; i++) {
+                const amount = itemStock[i];
+                total += amount;
+                const name = prophecies[i].item;
+                const textColorClass = amount === 0 ? 'text-red-500 font-bold' : 'text-blue-700 font-bold';
+                
+                stockList.innerHTML += `
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                        <span>${i}. ${name}</span> 
+                        <span class="${textColorClass}">${amount} ชิ้น</span>
+                    </div>`;
+            }
+            
+            stockList.innerHTML += `
+                <div class="flex justify-between items-center font-bold pt-2 text-lg text-blue-900">
+                    <span>รวมทั้งหมด</span> 
+                    <span>${total} ชิ้น</span>
+                </div>`;
+            
+            document.getElementById('stock-modal').classList.remove('hidden');
+        }
+
+        function closeStockModal() {
+            document.getElementById('stock-modal').classList.add('hidden');
         }
     </script>
 </body>
