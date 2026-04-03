@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เซียมซีออนไลน์ ไอเทมควรมี</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            /* Mood & Tone: น้ำเงิน ฟ้า ขาว */
+            background: linear-gradient(135deg, #F0F9FF 0%, #BAE6FD 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animations */
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg) translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: rotate(8deg) translateX(4px); }
+            20%, 40%, 60%, 80% { transform: rotate(-8deg) translateX(-4px); }
+        }
+
+        @keyframes jumpAndFall {
+            0% { 
+                transform: translateY(0) rotate(0deg); 
+                opacity: 0; 
+            }
+            10% {
+                opacity: 1;
+            }
+            40% { 
+                transform: translateY(-80px) rotate(15deg); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateY(300px) rotate(45deg); 
+                opacity: 0; 
+            }
+        }
+
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.9) translate(-50%, -50%); }
+            100% { opacity: 1; transform: scale(1) translate(-50%, -50%); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .shake-active {
+            animation: shake 1.5s ease-in-out;
+        }
+
+        .stick-falling {
+            display: block !important;
+            animation: jumpAndFall 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .modal-active {
+            animation: fadeInScale 0.4s ease-out forwards;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #E0F2FE; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #7DD3FC; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38BDF8; 
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center relative">
+
+    <!-- Header -->
+    <div class="z-10 text-center mt-8 w-full max-w-md px-4 mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-blue-900 mb-3 drop-shadow-sm">ไอเทมที่เหมาะกับคุณวันนี้</h1>
+        <p class="text-blue-700 text-sm md:text-base bg-white/50 inline-block px-4 py-2 rounded-full shadow-sm backdrop-blur-sm">
+            กดที่กระบอกเพื่อเสี่ยงทาย
+        </p>
+    </div>
+
+    <!-- The Esiimsi Interactive Area -->
+    <div class="relative z-10 w-full max-w-sm flex justify-center h-80 cursor-pointer group" onclick="shakeCylinder()">
+        
+        <!-- Falling Stick (Hidden initially) -->
+        <div id="falling-stick" class="absolute top-10 left-1/2 transform -translate-x-1/2 hidden z-20 w-8 h-32">
+            <div class="w-full h-full bg-amber-100 border-2 border-amber-600 rounded-sm relative flex items-center justify-center shadow-md">
+                <span id="falling-number" class="text-blue-900 font-bold text-xl transform -rotate-90"></span>
+                <!-- ปลายไม้สีฟ้าให้เข้าธีม -->
+                <div class="absolute top-1 left-1 right-1 h-2 bg-blue-400 rounded-sm"></div>
+            </div>
+        </div>
+
+        <!-- Cylinder & Static Sticks -->
+        <div id="cylinder-container" class="relative transition-transform duration-300 group-hover:scale-110 animate-float">
+            <!-- Background glow -->
+            <div class="absolute inset-0 bg-cyan-300 blur-2xl opacity-60 rounded-full animate-pulse"></div>
+            
+            <!-- SVG Cylinder (Cute Bright Blue Theme) -->
+            <svg width="150" height="230" viewBox="0 0 150 230" fill="none" xmlns="http://www.w3.org/2000/svg" class="relative z-10 drop-shadow-2xl">
+                <!-- Sticks inside -->
+                <rect x="40" y="15" width="8" height="120" rx="4" fill="#FDE68A" />
+                <rect x="55" y="10" width="8" height="130" rx="4" fill="#FCD34D" />
+                <rect x="70" y="20" width="8" height="110" rx="4" fill="#FEF3C7" />
+                <rect x="85" y="13" width="8" height="125" rx="4" fill="#FDE68A" />
+                <rect x="100" y="25" width="8" height="100" rx="4" fill="#FCD34D" />
+                <!-- Bright Blue tips -->
+                <rect x="40" y="15" width="8" height="15" rx="4" fill="#38BDF8" />
+                <rect x="55" y="10" width="8" height="15" rx="4" fill="#0EA5E9" />
+                <rect x="70" y="20" width="8" height="15" rx="4" fill="#60A5FA" />
+                <rect x="85" y="13" width="8" height="15" rx="4" fill="#38BDF8" />
+                <rect x="100" y="25" width="8" height="15" rx="4" fill="#0EA5E9" />
+
+                <!-- The Pot / Cylinder (Chubbier & Brighter) -->
+                <path d="M25 85 Q 15 155 28 215 L 122 215 Q 135 155 125 85 Z" fill="url(#grad-bright-blue)" stroke="#0284C7" stroke-width="3"/>
+                
+                <!-- Cute Rims -->
+                <ellipse cx="75" cy="85" rx="52" ry="14" fill="#FFFFFF" stroke="#38BDF8" stroke-width="3"/>
+                <ellipse cx="75" cy="85" rx="42" ry="8" fill="#BAE6FD"/>
+                <ellipse cx="75" cy="215" rx="48" ry="12" fill="#FFFFFF" stroke="#38BDF8" stroke-width="3"/>
+                
+                <!-- Sparkles / Kawaii Elements -->
+                <path d="M40 130 L 45 140 L 55 145 L 45 150 L 40 160 L 35 150 L 25 145 L 35 140 Z" fill="#FEF08A"/>
+                <path d="M110 110 L 113 118 L 121 121 L 113 124 L 110 132 L 107 124 L 99 121 L 107 118 Z" fill="#FEF08A" transform="scale(0.7) translate(30, -30)"/>
+                <circle cx="75" cy="160" r="18" fill="#FFFFFF" opacity="0.3"/>
+                <circle cx="95" cy="140" r="8" fill="#FFFFFF" opacity="0.3"/>
+                <path d="M50 110 Q 75 90 100 110" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.6"/>
+                <path d="M55 180 Q 75 195 95 180" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.6"/>
+
+                <defs>
+                    <linearGradient id="grad-bright-blue" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#7DD3FC" />
+                        <stop offset="50%" stop-color="#38BDF8" />
+                        <stop offset="100%" stop-color="#0284C7" />
+                    </linearGradient>
+                </defs>
+            </svg>
+            
+            <p id="instruction-text" class="text-center text-sm font-bold text-blue-600 mt-4 animate-bounce bg-white rounded-full py-2 px-6 inline-block relative left-1/2 transform -translate-x-1/2 shadow-lg border-2 border-blue-200">✨ กดเพื่อเขย่าเลย! ✨</p>
+        </div>
+    </div>
+
+    <!-- Overlay & Result Modal -->
+    <div id="overlay" class="fixed inset-0 bg-blue-900/40 backdrop-blur-sm z-30 hidden transition-opacity duration-300"></div>
+    
+    <div id="result-modal" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40 w-[90%] max-w-md bg-white rounded-3xl shadow-2xl hidden flex-col overflow-hidden border border-blue-100">
+        
+        <!-- Modal Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-6 text-center relative border-b-4 border-blue-300">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-white/80 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <p class="text-blue-100 text-sm font-medium tracking-wider mb-1">ไอเทมที่เหมาะกับคุณวันนี้คือ</p>
+            <h2 class="text-3xl font-bold text-white mb-1">หมายเลข <span id="res-number" class="text-white text-5xl drop-shadow-md"></span></h2>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-5 md:p-6 max-h-[65vh] overflow-y-auto bg-slate-50">
+            
+            <div class="text-center mb-5">
+                <span class="text-xs font-bold text-blue-500 tracking-wider uppercase bg-blue-100 px-3 py-1 rounded-full">ไอเทมที่เหมาะกับคุณ</span>
+                <h3 id="res-item" class="text-2xl font-bold text-blue-900 mt-3 drop-shadow-sm"></h3>
+            </div>
+
+            <!-- Prophecy -->
+            <div class="bg-white rounded-2xl p-4 mb-4 shadow-sm border border-gray-100 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                <h4 class="font-bold text-blue-800 mb-2 flex items-center text-sm"><span class="text-lg mr-2">🔮</span> คำทำนาย</h4>
+                <p id="res-prophecy" class="text-gray-700 italic text-sm leading-relaxed"></p>
+            </div>
+
+            <!-- Health Insight -->
+            <div class="bg-rose-50 rounded-2xl p-4 mb-4 shadow-sm border border-rose-100 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-rose-500"></div>
+                <h4 class="font-bold text-rose-800 mb-2 flex items-center text-sm"><span class="text-lg mr-2">⚠️</span> Health Insight</h4>
+                <p id="res-insight" class="text-gray-700 text-sm leading-relaxed"></p>
+            </div>
+
+            <!-- Reason & Summary -->
+            <div class="bg-emerald-50 rounded-2xl p-4 mb-4 shadow-sm border border-emerald-100 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+                <h4 class="font-bold text-emerald-800 mb-2 flex items-center text-sm"><span class="text-lg mr-2">✅</span> ทำไมไอเทมนี้เหมาะ</h4>
+                <p id="res-reason" class="text-gray-700 text-sm leading-relaxed mb-3"></p>
+                <div class="bg-emerald-100/50 p-2 rounded-lg border border-emerald-200/50">
+                    <p id="res-summary" class="text-emerald-800 font-semibold text-sm"></p>
+                </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="bg-amber-50 rounded-2xl p-4 shadow-sm border border-amber-100 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-amber-400"></div>
+                <h4 class="font-bold text-amber-800 mb-2 flex items-center text-sm"><span class="text-lg mr-2">💡</span> Tips</h4>
+                <p id="res-tips" class="text-gray-700 text-sm leading-relaxed"></p>
+            </div>
+
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="p-4 bg-white text-center border-t border-gray-100">
+            <button onclick="window.open('https://delivery.doubleapaper.com/?gad_source=1&gad_campaignid=21526959724&gbraid=0AAAAADHIo_iEe8ZVHaUyfxL_xyPzTeXse&gclid=Cj0KCQjwmunNBhDbARIsAOndKpkM2zwBwet5XWitZB41wKuXZ8lwZvhuIaY1Gm3fBJX2QMJO4ZHasZkaAtgcEALw_wcB', '_blank')" class="w-full md:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-md transition-all duration-200 transform hover:scale-105">
+                กดที่นี่ เมื่อได้รับไปเทมจากทีมงานแล้ว
+            </button>
+        </div>
+    </div>
+
+    <!-- Data & Logic -->
+    <script>
+        // State
+        let isAnimating = false;
+
+        // Prophecy Data (1-6) Items & Insights
+        const prophecies = {
+            1: {
+                item: "หน้ากากอนามัย",
+                prophecy: "“วันนี้คุณมีเกณฑ์ต้องเจอคนเยอะ หรืออยู่ในพื้นที่แออัดโดยไม่ทันตั้งตัว”",
+                insight: "การอยู่ในที่คนหนาแน่นเพิ่มความเสี่ยงในการรับเชื้อโรคและฝุ่น PM2.5 โดยไม่รู้ตัว โดยเฉพาะช่วงที่ร่างกายอ่อนล้า",
+                reason: "หน้ากากคือด่านแรกในการป้องกัน ทั้งฝุ่น แบคทีเรีย และกลิ่นไม่พึงประสงค์",
+                summary: "👉 ช่วยให้คุณ “มั่นใจ” และ “ปลอดภัย” ไปพร้อมกัน",
+                tips: "ควรเปลี่ยนหน้ากากทุก 4–6 ชั่วโมง เพื่อประสิทธิภาพสูงสุด ช้อปเพิ่มที่บูธได้เลย"
+            },
+            2: {
+                item: "Shopping Bag",
+                prophecy: "“วันนี้มีเกณฑ์ได้ของเพิ่มแบบไม่ตั้งใจ หรือมีเรื่องให้ต้องพกพาของมากกว่าปกติ”",
+                insight: "การถือของหลายชิ้นโดยไม่สมดุล อาจทำให้เกิดอาการปวดไหล่ ปวดหลัง หรือ Office Syndrome ได้",
+                reason: "Shopping Bag ช่วยกระจายน้ำหนัก ลดการเกร็งกล้ามเนื้อ",
+                summary: "👉 ทำให้การเคลื่อนไหวของคุณสบายขึ้น",
+                tips: "พยายามสะพายสลับข้าง เพื่อลดการกดทับด้านใดด้านหนึ่ง"
+            },
+            3: {
+                item: "สมุดโน้ต",
+                prophecy: "“วันนี้เป็นวันที่ไอเดียคุณไหลลื่น มีสิ่งใหม่ ๆ เข้ามาให้คิดและตัดสินใจ”",
+                insight: "การจดบันทึกช่วยลดความเครียดจากการพยายามจำหลายเรื่องพร้อมกัน",
+                reason: "จำไม่หมด จดลงสมุดดีกว่า",
+                summary: "👉 ลดความเครียด และเพิ่มประสิทธิภาพในการทำงาน",
+                tips: "ลองเขียน To-do list 3 อย่างหลักของวัน จะช่วยให้โฟกัสดีขึ้น"
+            },
+            4: {
+                item: "Gift Set",
+                prophecy: "“วันนี้เหมาะกับการส่งต่อความรู้สึกดี ๆ หรือสร้างความสัมพันธ์กับใครบางคน”",
+                insight: "การให้และการสร้างความสัมพันธ์ที่ดี ช่วยลดความเครียด และส่งผลดีต่อสุขภาพจิต",
+                reason: "Gift Set คือสื่อกลางของความใส่ใจ",
+                summary: "👉 ช่วยให้ทั้ง ‘ผู้ให้’ และ ‘ผู้รับ’ รู้สึกดี",
+                tips: "ลองเขียนโน้ตเล็ก ๆ แนบไป จะเพิ่มคุณค่าทางใจมากขึ้น"
+            },
+            5: {
+                item: "ทิชชูเปียก(ขนาดเล็ก)",
+                prophecy: "“วันนี้คุณมีเกณฑ์ต้องลุย เดินทาง หรือเจอสถานการณ์ที่ไม่สะดวกสบาย”",
+                insight: "การสัมผัสพื้นผิวสาธารณะ เช่น ราวจับ โต๊ะ หรือเงินสด อาจมีเชื้อโรคสะสม",
+                reason: "ทิชชูเปียกช่วยทำความสะอาดมือและพื้นผิวได้ทันที",
+                summary: "👉 ลดความเสี่ยงในการสะสมเชื้อโรค",
+                tips: "ควรเช็ดมือก่อนรับประทานอาหารทุกครั้ง"
+            },
+            6: {
+                item: "ทิชชูพกพา",
+                prophecy: "“วันนี้มีเรื่องเล็ก ๆ น้อย ๆ เข้ามาให้คุณต้องจัดการตลอดทั้งวัน”",
+                insight: "การรักษาความสะอาดเล็ก ๆ น้อย ๆ เช่น เช็ดเหงื่อ เช็ดสิ่งสกปรก ช่วยลดการสะสมของแบคทีเรีย",
+                reason: "ทิชชูแห้งคือไอเทมพื้นฐานที่ใช้ได้ทุกสถานการณ์",
+                summary: "👉 ช่วยให้คุณพร้อมรับมือทุกเรื่องจุกจิก",
+                tips: "พกติดตัวไว้เสมอ จะช่วยให้จัดการสถานการณ์ไม่คาดคิดได้ง่ายขึ้น"
+            }
+        };
+
+        // ตรวจสอบเมื่อโหลดหน้าเว็บว่าเคยเล่นไปแล้วหรือยัง
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedResult = localStorage.getItem('seamsi_result');
+            if (savedResult) {
+                const instruction = document.getElementById('instruction-text');
+                instruction.innerText = '✨ ดูไอเทมของคุณ ✨';
+                instruction.classList.remove('animate-bounce'); // เอาเอฟเฟกต์เด้งออกเพราะเล่นไปแล้ว
+            }
+        });
+
+        function shakeCylinder() {
+            if(isAnimating) return;
+
+            // ตรวจสอบว่าเคยสุ่มไปแล้วหรือไม่
+            const savedResult = localStorage.getItem('seamsi_result');
+            if (savedResult) {
+                // ถ้าเคยสุ่มแล้ว ให้โชว์ผลลัพธ์เดิมทันทีโดยไม่ต้องเขย่าใหม่
+                showResultModal(savedResult);
+                return;
+            }
+
+            isAnimating = true;
+
+            const cylinder = document.getElementById('cylinder-container');
+            const fallingStick = document.getElementById('falling-stick');
+            const instruction = document.getElementById('instruction-text');
+            
+            instruction.style.opacity = '0';
+            
+            // Start shake animation
+            cylinder.classList.add('shake-active');
+
+            // Play animation
+            setTimeout(() => {
+                cylinder.classList.remove('shake-active');
+                
+                // Pick a random number 1-6
+                const resultNumber = Math.floor(Math.random() * 6) + 1;
+                document.getElementById('falling-number').innerText = resultNumber;
+
+                // บันทึกผลลัพธ์ลงในเครื่องผู้เล่น
+                localStorage.setItem('seamsi_result', resultNumber);
+
+                // Animate stick falling out
+                fallingStick.classList.add('stick-falling');
+
+                // Wait for stick to fall, then show modal
+                setTimeout(() => {
+                    showResultModal(resultNumber);
+                    
+                    // Reset stick
+                    setTimeout(() => {
+                        fallingStick.classList.remove('stick-falling');
+                        instruction.innerText = '✨ ดูไอเทมของคุณ ✨';
+                        instruction.classList.remove('animate-bounce');
+                        instruction.style.opacity = '1';
+                    }, 500);
+
+                }, 1400); // Trigger modal just before stick animation ends
+
+            }, 1500); // Length of shake animation
+        }
+
+        function showResultModal(number) {
+            const data = prophecies[number];
+            
+            // Populate Data
+            document.getElementById('res-number').innerText = number;
+            document.getElementById('res-item').innerText = data.item;
+            document.getElementById('res-prophecy').innerText = data.prophecy;
+            document.getElementById('res-insight').innerText = data.insight;
+            document.getElementById('res-reason').innerText = data.reason;
+            document.getElementById('res-summary').innerText = data.summary;
+            document.getElementById('res-tips').innerText = data.tips;
+
+            // Show UI
+            document.getElementById('overlay').classList.remove('hidden');
+            const modal = document.getElementById('result-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-active');
+        }
+
+        function closeModal() {
+            document.getElementById('overlay').classList.add('hidden');
+            const modal = document.getElementById('result-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('modal-active');
+            isAnimating = false;
+        }
+    </script>
+</body>
+</html>
