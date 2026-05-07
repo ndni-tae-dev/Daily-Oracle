@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=Itim&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
         :root {
             --blue-50: #EFF6FF;
             --blue-100: #DBEAFE;
@@ -23,7 +23,7 @@
             --gold: #F59E0B;
             --gold-light: #FCD34D;
         }
- 
+
         body {
             font-family: 'Mitr', sans-serif;
             background: #F0F6FF;
@@ -31,8 +31,7 @@
             overflow-x: hidden;
             position: relative;
         }
- 
-        /* Geometric background pattern */
+
         body::before {
             content: '';
             position: fixed;
@@ -44,7 +43,7 @@
             pointer-events: none;
             z-index: 0;
         }
- 
+
         body::after {
             content: '';
             position: fixed;
@@ -53,8 +52,7 @@
             pointer-events: none;
             z-index: 0;
         }
- 
-        /* ---- LAYOUT ---- */
+
         .page-wrapper {
             position: relative;
             z-index: 1;
@@ -64,14 +62,14 @@
             min-height: 100vh;
             padding: 40px 20px 60px;
         }
- 
+
         /* ---- HEADER ---- */
         .header {
             text-align: center;
             margin-bottom: 48px;
             max-width: 520px;
         }
- 
+
         .header-badge {
             display: inline-flex;
             align-items: center;
@@ -86,7 +84,7 @@
             border-radius: 20px;
             margin-bottom: 16px;
         }
- 
+
         .header-badge::before {
             content: '';
             width: 6px; height: 6px;
@@ -94,12 +92,12 @@
             border-radius: 50%;
             animation: pulse-dot 2s ease-in-out infinite;
         }
- 
+
         @keyframes pulse-dot {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(0.7); }
         }
- 
+
         .header h1 {
             font-family: 'Itim', cursive;
             font-size: clamp(28px, 5vw, 42px);
@@ -108,19 +106,19 @@
             line-height: 1.2;
             margin-bottom: 12px;
         }
- 
+
         .header h1 em {
             font-style: italic;
             color: var(--blue-600);
         }
- 
+
         .header p {
             font-size: 14px;
             color: #64748B;
             font-weight: 300;
             letter-spacing: 0.02em;
         }
- 
+
         /* ---- ORACLE CONTAINER ---- */
         .oracle-wrapper {
             position: relative;
@@ -129,20 +127,19 @@
             cursor: pointer;
             margin-bottom: 32px;
         }
- 
+
         .oracle-glow {
             position: absolute;
             inset: -20px;
             background: radial-gradient(ellipse at center, rgba(59,130,246,0.2) 0%, transparent 70%);
             animation: glow-pulse 3s ease-in-out infinite;
         }
- 
+
         @keyframes glow-pulse {
             0%, 100% { opacity: 0.5; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.05); }
         }
- 
-        /* Cylinder SVG area */
+
         .cylinder-group {
             position: relative;
             z-index: 2;
@@ -152,13 +149,12 @@
             height: 100%;
             animation: float-oracle 4s ease-in-out infinite;
         }
- 
+
         @keyframes float-oracle {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-12px); }
         }
- 
-        /* Falling stick */
+
         .falling-stick {
             position: absolute;
             top: 40px;
@@ -169,7 +165,7 @@
             z-index: 10;
             display: none;
         }
- 
+
         .stick-inner {
             width: 100%;
             height: 100%;
@@ -183,7 +179,7 @@
             position: relative;
             overflow: hidden;
         }
- 
+
         .stick-inner::before {
             content: '';
             position: absolute;
@@ -192,23 +188,22 @@
             background: linear-gradient(135deg, var(--blue-500), var(--blue-700));
             border-radius: 2px 2px 0 0;
         }
- 
+
         .stick-number {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Itim', cursive;
             font-size: 20px;
             font-weight: 700;
             color: var(--blue-900);
             transform: rotate(-90deg);
             margin-top: 8px;
         }
- 
-        /* Oracle cylinder SVG */
+
         .oracle-svg {
             width: 160px;
             filter: drop-shadow(0 20px 40px rgba(37,99,235,0.35));
         }
- 
-        /* CTA button */
+
+        /* ---- CTA BUTTON ---- */
         .cta-button {
             display: inline-flex;
             align-items: center;
@@ -228,46 +223,128 @@
             position: relative;
             overflow: hidden;
         }
- 
+
         .cta-button::before {
             content: '';
             position: absolute;
             inset: 0;
             background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
         }
- 
-        .cta-button:hover {
+
+        .cta-button:hover:not(:disabled) {
             transform: translateY(-2px) scale(1.03);
             box-shadow: 0 12px 32px rgba(37,99,235,0.45), 0 4px 8px rgba(37,99,235,0.25);
         }
- 
+
+        .cta-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .cta-button .icon {
             width: 18px; height: 18px;
             animation: spin-slow 4s linear infinite;
         }
- 
+
         @keyframes spin-slow {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
- 
+
+        /* ---- COUNTDOWN OVERLAY ---- */
+        .countdown-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(10px);
+            z-index: 80;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .countdown-overlay.visible {
+            display: flex;
+        }
+
+        .countdown-ring {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .countdown-ring svg {
+            position: absolute;
+            inset: 0;
+            transform: rotate(-90deg);
+        }
+
+        .countdown-ring circle.track {
+            fill: none;
+            stroke: rgba(255,255,255,0.1);
+            stroke-width: 6;
+        }
+
+        .countdown-ring circle.progress {
+            fill: none;
+            stroke: var(--blue-400);
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .countdown-number {
+            font-family: 'Itim', cursive;
+            font-size: 80px;
+            font-weight: 700;
+            color: white;
+            line-height: 1;
+            text-shadow: 0 0 40px rgba(96,165,250,0.7);
+            transition: transform 0.15s ease;
+        }
+
+        .countdown-number.pop {
+            transform: scale(1.25);
+        }
+
+        .countdown-label {
+            font-size: 13px;
+            color: rgba(255,255,255,0.55);
+            font-weight: 300;
+            letter-spacing: 0.06em;
+            text-align: center;
+        }
+
+        .countdown-sublabel {
+            font-size: 11px;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
         /* ---- ANIMATIONS ---- */
         @keyframes shake {
             0%, 100% { transform: rotate(0deg) translateX(0); }
             10%, 30%, 50%, 70%, 90% { transform: rotate(7deg) translateX(5px); }
             20%, 40%, 60%, 80% { transform: rotate(-7deg) translateX(-5px); }
         }
- 
+
         @keyframes stick-fall {
             0% { transform: translateX(-50%) translateY(0) rotate(0deg); opacity: 0; }
             8% { opacity: 1; }
             40% { transform: translateX(-50%) translateY(-70px) rotate(12deg); opacity: 1; }
             100% { transform: translateX(-50%) translateY(320px) rotate(42deg); opacity: 0; }
         }
- 
+
         .shake-active { animation: shake 1.5s ease-in-out; }
         .stick-falling { display: block !important; animation: stick-fall 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
- 
+
         /* ---- MODAL ---- */
         .overlay {
             position: fixed;
@@ -279,9 +356,9 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
- 
+
         .overlay.visible { display: block; opacity: 1; }
- 
+
         .modal {
             position: fixed;
             top: 50%;
@@ -298,21 +375,20 @@
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
- 
+
         .modal.visible {
             display: flex;
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
         }
- 
-        /* Modal header */
+
         .modal-header {
             background: linear-gradient(135deg, var(--blue-700) 0%, var(--blue-900) 100%);
             padding: 28px 28px 24px;
             position: relative;
             overflow: hidden;
         }
- 
+
         .modal-header::before {
             content: '';
             position: absolute;
@@ -321,7 +397,7 @@
             background: rgba(255,255,255,0.06);
             border-radius: 50%;
         }
- 
+
         .modal-header::after {
             content: '';
             position: absolute;
@@ -330,7 +406,7 @@
             background: rgba(255,255,255,0.04);
             border-radius: 50%;
         }
- 
+
         .modal-close {
             position: absolute;
             top: 16px; right: 16px;
@@ -344,9 +420,9 @@
             transition: background 0.2s;
             z-index: 1;
         }
- 
+
         .modal-close:hover { background: rgba(255,255,255,0.25); }
- 
+
         .modal-label {
             font-size: 11px;
             font-weight: 500;
@@ -356,15 +432,14 @@
             margin-bottom: 4px;
             position: relative; z-index: 1;
         }
- 
+
         .modal-number {
-            font-family: 'Playfair Display', serif;
             font-size: 14px;
             color: rgba(255,255,255,0.7);
             margin-bottom: 2px;
             position: relative; z-index: 1;
         }
- 
+
         .modal-title {
             font-family: 'Itim', cursive;
             font-size: clamp(22px, 4vw, 28px);
@@ -372,13 +447,7 @@
             color: white;
             position: relative; z-index: 1;
         }
- 
-        .modal-title span {
-            font-size: clamp(36px, 7vw, 52px);
-            line-height: 1;
-            color: var(--gold-light);
-        }
- 
+
         .stock-warning {
             display: none;
             margin-top: 10px;
@@ -391,26 +460,25 @@
             border-radius: 8px;
             position: relative; z-index: 1;
         }
- 
-        /* Modal body */
+
         .modal-body {
             padding: 20px;
             max-height: 55vh;
             overflow-y: auto;
             background: #F8FAFC;
         }
- 
+
         .modal-body::-webkit-scrollbar { width: 4px; }
         .modal-body::-webkit-scrollbar-track { background: transparent; }
         .modal-body::-webkit-scrollbar-thumb { background: var(--blue-200); border-radius: 4px; }
- 
+
         .item-name-row {
             text-align: center;
             margin-bottom: 16px;
             padding-bottom: 16px;
             border-bottom: 1px solid var(--blue-100);
         }
- 
+
         .item-tag {
             font-size: 10px;
             font-weight: 600;
@@ -424,14 +492,14 @@
             display: inline-block;
             margin-bottom: 8px;
         }
- 
+
         .item-name {
             font-family: 'Itim', cursive;
             font-size: 22px;
             font-weight: 700;
             color: var(--blue-900);
         }
- 
+
         .info-card {
             background: white;
             border-radius: 14px;
@@ -441,7 +509,7 @@
             position: relative;
             overflow: hidden;
         }
- 
+
         .info-card::before {
             content: '';
             position: absolute;
@@ -449,12 +517,12 @@
             width: 3px;
             border-radius: 3px 0 0 3px;
         }
- 
+
         .info-card.prophecy::before { background: var(--blue-500); }
         .info-card.insight::before { background: #EF4444; }
         .info-card.reason::before { background: #10B981; }
         .info-card.tips::before { background: var(--gold); }
- 
+
         .info-card-label {
             font-size: 11px;
             font-weight: 600;
@@ -465,24 +533,18 @@
             align-items: center;
             gap: 6px;
         }
- 
+
         .info-card.prophecy .info-card-label { color: var(--blue-600); }
         .info-card.insight .info-card-label { color: #DC2626; }
         .info-card.reason .info-card-label { color: #059669; }
         .info-card.tips .info-card-label { color: #D97706; }
- 
+
         .info-card p {
             font-size: 13px;
             color: #475569;
             line-height: 1.65;
         }
- 
-        .info-card p em {
-            color: var(--blue-900);
-            font-style: normal;
-            font-weight: 500;
-        }
- 
+
         .summary-tag {
             display: inline-block;
             background: #ECFDF5;
@@ -494,14 +556,13 @@
             border-radius: 8px;
             margin-top: 8px;
         }
- 
-        /* Modal footer */
+
         .modal-footer {
             padding: 16px 20px;
             background: white;
             border-top: 1px solid #E2E8F0;
         }
- 
+
         .claim-btn {
             width: 100%;
             padding: 13px 20px;
@@ -517,13 +578,12 @@
             box-shadow: 0 4px 14px rgba(37,99,235,0.35);
             transition: all 0.25s ease;
         }
- 
+
         .claim-btn:hover {
             transform: translateY(-1px);
             box-shadow: 0 6px 20px rgba(37,99,235,0.45);
         }
- 
-        /* ---- DECORATIVE DIVIDER ---- */
+
         .divider {
             display: flex;
             align-items: center;
@@ -536,15 +596,14 @@
             width: 100%;
             max-width: 300px;
         }
- 
+
         .divider::before, .divider::after {
             content: '';
             flex: 1;
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--blue-200), transparent);
         }
- 
-        /* ---- RESPONSIVE ---- */
+
         @media (max-width: 400px) {
             .oracle-wrapper { width: 220px; height: 280px; }
             .oracle-svg { width: 130px; }
@@ -553,26 +612,20 @@
 </head>
 <body>
 <div class="page-wrapper">
- 
-    <!-- Header -->
+
     <header class="header">
         <div class="header-badge">Daily Oracle · ไอเทมประจำวัน</div>
         <h1>ไอเทมที่<em>เหมาะกับคุณ</em><br>วันนี้คืออะไร?</h1>
         <p>สุ่มไอเทมเพื่อรับคำแนะนำสำหรับวันนี้ของคุณ</p>
     </header>
- 
-    <!-- Oracle Cylinder -->
+
     <div class="oracle-wrapper" onclick="shakeCylinder()">
         <div class="oracle-glow"></div>
- 
-        <!-- Falling stick -->
         <div id="falling-stick" class="falling-stick">
             <div class="stick-inner">
                 <span id="falling-number" class="stick-number"></span>
             </div>
         </div>
- 
-        <!-- Cylinder -->
         <div id="cylinder-container" class="cylinder-group">
             <svg class="oracle-svg" viewBox="0 0 160 260" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
@@ -581,79 +634,66 @@
                         <stop offset="40%" stop-color="#3B82F6"/>
                         <stop offset="100%" stop-color="#1E3A8A"/>
                     </linearGradient>
-                    <linearGradient id="rim-grad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#BFDBFE"/>
-                        <stop offset="100%" stop-color="#93C5FD"/>
-                    </linearGradient>
                     <filter id="shadow-drop">
                         <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#1E3A8A" flood-opacity="0.25"/>
                     </filter>
-                    <linearGradient id="stick1" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#FEF3C7"/>
-                        <stop offset="100%" stop-color="#FDE68A"/>
-                    </linearGradient>
                 </defs>
- 
-                <!-- Sticks protruding -->
                 <rect x="44" y="10" width="7" height="105" rx="3.5" fill="#FDE68A" opacity="0.9"/>
                 <rect x="57" y="4"  width="7" height="115" rx="3.5" fill="#FEF3C7" opacity="0.95"/>
                 <rect x="70" y="14" width="7" height="98"  rx="3.5" fill="#FCD34D" opacity="0.9"/>
                 <rect x="83" y="7"  width="7" height="110" rx="3.5" fill="#FDE68A" opacity="0.95"/>
                 <rect x="96" y="18" width="7" height="94"  rx="3.5" fill="#FEF3C7" opacity="0.85"/>
-                <!-- Stick tips (colored) -->
                 <rect x="44" y="10" width="7" height="12" rx="3.5" fill="#2563EB"/>
                 <rect x="57" y="4"  width="7" height="12" rx="3.5" fill="#1D4ED8"/>
                 <rect x="70" y="14" width="7" height="12" rx="3.5" fill="#3B82F6"/>
                 <rect x="83" y="7"  width="7" height="12" rx="3.5" fill="#2563EB"/>
                 <rect x="96" y="18" width="7" height="12" rx="3.5" fill="#1E40AF"/>
- 
-                <!-- Body -->
                 <path d="M22 100 Q14 170 26 238 L134 238 Q146 170 138 100 Z" fill="url(#body-grad)" stroke="#1E40AF" stroke-width="1.5" filter="url(#shadow-drop)"/>
- 
-                <!-- Shine stripe -->
                 <path d="M34 105 Q31 160 36 225" stroke="rgba(255,255,255,0.18)" stroke-width="14" stroke-linecap="round" fill="none"/>
- 
-                <!-- Top ellipse rim -->
                 <ellipse cx="80" cy="100" rx="58" ry="16" fill="#DBEAFE" stroke="#93C5FD" stroke-width="2"/>
                 <ellipse cx="80" cy="100" rx="45" ry="10" fill="#EFF6FF" opacity="0.8"/>
- 
-                <!-- Bottom ellipse rim -->
                 <ellipse cx="80" cy="238" rx="54" ry="14" fill="#DBEAFE" stroke="#93C5FD" stroke-width="2"/>
- 
-                <!-- Decorative band -->
                 <path d="M26 155 Q14 157 26 159 L134 159 Q146 157 134 155 Z" fill="rgba(255,255,255,0.12)"/>
- 
-                <!-- Gold accent ring -->
                 <ellipse cx="80" cy="100" rx="50" ry="13" fill="none" stroke="#F59E0B" stroke-width="1" stroke-dasharray="4 6" opacity="0.5"/>
- 
-                <!-- Highlight dot -->
                 <circle cx="55" cy="155" r="16" fill="white" opacity="0.08"/>
                 <circle cx="100" cy="130" r="8" fill="white" opacity="0.07"/>
- 
-                <!-- Small decorative stars -->
                 <path d="M42 180 L44 175 L46 180 L51 182 L46 184 L44 189 L42 184 L37 182 Z" fill="rgba(253,230,138,0.6)"/>
                 <path d="M112 148 L113.5 144 L115 148 L119 149.5 L115 151 L113.5 155 L112 151 L108 149.5 Z" fill="rgba(253,230,138,0.5)" transform="scale(0.75) translate(35, -15)"/>
             </svg>
         </div>
     </div>
- 
+
     <div class="divider">แตะเพื่อเสี่ยงทาย</div>
- 
-    <button class="cta-button" onclick="shakeCylinder()">
+
+    <button class="cta-button" id="cta-btn" onclick="shakeCylinder()">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
         </svg>
         <span id="cta-label">เขย่ากระบอก เสี่ยงทาย</span>
     </button>
- 
+
 </div>
- 
-<!-- Overlay -->
+
+<!-- Countdown Overlay -->
+<div id="countdown-overlay" class="countdown-overlay">
+    <div class="countdown-ring">
+        <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+            <circle class="track" cx="90" cy="90" r="80"/>
+            <circle class="progress" id="countdown-progress" cx="90" cy="90" r="80"
+                stroke-dasharray="502.65"
+                stroke-dashoffset="0"/>
+        </svg>
+        <div id="countdown-number" class="countdown-number">3</div>
+    </div>
+    <div class="countdown-label">เตรียมพร้อมสำหรับผู้เล่นคนถัดไป</div>
+    <div class="countdown-sublabel">กรุณารอสักครู่...</div>
+</div>
+
+<!-- Modal Overlay -->
 <div id="overlay" class="overlay" onclick="closeModal()"></div>
- 
+
 <!-- Result Modal -->
 <div id="result-modal" class="modal">
-    <!-- Header -->
     <div class="modal-header">
         <button class="modal-close" onclick="closeModal()">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
@@ -665,14 +705,13 @@
         <div class="modal-title" id="res-item-header"></div>
         <div id="stock-warning" class="stock-warning">⚠️ ของแจกจริงหมดแล้ว · ได้รับไอเทมเสมือนแทน</div>
     </div>
- 
-    <!-- Body -->
+
     <div class="modal-body">
         <div class="item-name-row">
             <div class="item-tag">ไอเทมที่เหมาะกับคุณวันนี้</div>
             <div class="item-name" id="res-item"></div>
         </div>
- 
+
         <div class="info-card prophecy">
             <div class="info-card-label">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -680,7 +719,7 @@
             </div>
             <p id="res-prophecy"></p>
         </div>
- 
+
         <div class="info-card insight">
             <div class="info-card-label">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -688,7 +727,7 @@
             </div>
             <p id="res-insight"></p>
         </div>
- 
+
         <div class="info-card reason">
             <div class="info-card-label">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -697,7 +736,7 @@
             <p id="res-reason"></p>
             <div class="summary-tag" id="res-summary"></div>
         </div>
- 
+
         <div class="info-card tips">
             <div class="info-card-label">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -706,49 +745,67 @@
             <p id="res-tips"></p>
         </div>
     </div>
- 
-    <!-- Footer -->
+
     <div class="modal-footer">
         <button id="claim-button" class="claim-btn">กดที่นี่ เมื่อได้รับไอเทมจากทีมงานแล้ว</button>
     </div>
 </div>
- 
+
 <script>
 // ==========================================
 // DATA
 // ==========================================
 const physicalItems = {
-    1: { name: `หน้ากากอนามัย`, prophecy: `\u201cวันนี้คุณมีเกณฑ์ต้องเจอคนเยอะ หรืออยู่ในพื้นที่แออัดโดยไม่ทันตั้งตัว\u201d`, insight: `การอยู่ในที่คนหนาแน่นเพิ่มความเสี่ยงในการรับเชื้อโรคและฝุ่น PM2.5 โดยไม่รู้ตัว`, reason: `หน้ากากคือด่านแรกในการป้องกัน ทั้งฝุ่น แบคทีเรีย และกลิ่นไม่พึงประสงค์`, summary: `ช่วยให้คุณ \u201cมั่นใจ\u201d และ \u201cปลอดภัย\u201d ไปพร้อมกัน 💙`, tips: `ควรเปลี่ยนหน้ากากทุก 4-6 ชั่วโมง เพื่อประสิทธิภาพสูงสุด` },
-    2: { name: `Shopping Bag`, prophecy: `\u201cวันนี้มีเกณฑ์ได้ของเพิ่มแบบไม่ตั้งใจ หรือมีเรื่องให้ต้องพกพาของมากกว่าปกติ\u201d`, insight: `การถือของหลายชิ้นโดยไม่สมดุล อาจทำให้เกิดอาการปวดไหล่ ปวดหลัง หรือ Office Syndrome ได้`, reason: `Shopping Bag ช่วยกระจายน้ำหนัก ลดการเกร็งกล้ามเนื้อ`, summary: `ทำให้การเคลื่อนไหวของคุณสบายขึ้น 💙`, tips: `พยายามสะพายสลับข้าง เพื่อลดการกดทับด้านใดด้านหนึ่ง` },
-    3: { name: `สมุดโน้ต`, prophecy: `\u201cวันนี้เป็นวันที่ไอเดียคุณไหลลื่น มีสิ่งใหม่ ๆ เข้ามาให้คิดและตัดสินใจ\u201d`, insight: `การจดบันทึกช่วยลดความเครียดจากการพยายามจำหลายเรื่องพร้อมกัน`, reason: `จำไม่หมด จดลงสมุดดีกว่า`, summary: `ลดความเครียด และเพิ่มประสิทธิภาพในการทำงาน 💙`, tips: `ลองเขียน To-do list 3 อย่างหลักของวัน จะช่วยให้โฟกัสดีขึ้น` },
-    4: { name: `Gift Set`, prophecy: `\u201cวันนี้เหมาะกับการส่งต่อความรู้สึกดี ๆ หรือสร้างความสัมพันธ์กับใครบางคน\u201d`, insight: `การให้และการสร้างความสัมพันธ์ที่ดี ช่วยลดความเครียด และส่งผลดีต่อสุขภาพจิต`, reason: `Gift Set คือสื่อกลางของความใส่ใจ`, summary: `ช่วยให้ทั้ง 'ผู้ให้' และ 'ผู้รับ' รู้สึกดี 💙`, tips: `ลองเขียนโน้ตเล็ก ๆ แนบไป จะเพิ่มคุณค่าทางใจมากขึ้น` },
-    5: { name: `ทิชชูเปียก`, prophecy: `\u201cวันนี้คุณมีเกณฑ์ต้องลุย เดินทาง หรือเจอสถานการณ์ที่ไม่สะดวกสบาย\u201d`, insight: `การสัมผัสพื้นผิวสาธารณะ เช่น ราวจับ โต๊ะ หรือเงินสด อาจมีเชื้อโรคสะสม`, reason: `ทิชชูเปียกช่วยทำความสะอาดมือและพื้นผิวได้ทันที`, summary: `ลดความเสี่ยงในการสะสมเชื้อโรค 💙`, tips: `ควรเช็ดมือก่อนรับประทานอาหารทุกครั้ง` },
-    6: { name: `ทิชชูพกพา`, prophecy: `\u201cวันนี้มีเรื่องเล็ก ๆ น้อย ๆ เข้ามาให้คุณต้องจัดการตลอดทั้งวัน\u201d`, insight: `การรักษาความสะอาดเล็ก ๆ น้อย ๆ เช่น เช็ดเหงื่อ เช็ดสิ่งสกปรก ช่วยลดการสะสมของแบคทีเรีย`, reason: `ทิชชูแห้งคือไอเทมพื้นฐานที่ใช้ได้ทุกสถานการณ์`, summary: `ช่วยให้คุณพร้อมรับมือทุกเรื่องจุกจิก 💙`, tips: `พกติดตัวไว้เสมอ จะช่วยให้จัดการสถานการณ์ไม่คาดคิดได้ง่ายขึ้น` }
+    1: { name: `หน้ากากอนามัย`, prophecy: `"วันนี้คุณมีเกณฑ์ต้องเจอคนเยอะ หรืออยู่ในพื้นที่แออัดโดยไม่ทันตั้งตัว"`, insight: `การอยู่ในที่คนหนาแน่นเพิ่มความเสี่ยงในการรับเชื้อโรคและฝุ่น PM2.5 โดยไม่รู้ตัว`, reason: `หน้ากากคือด่านแรกในการป้องกัน ทั้งฝุ่น แบคทีเรีย และกลิ่นไม่พึงประสงค์`, summary: `ช่วยให้คุณ "มั่นใจ" และ "ปลอดภัย" ไปพร้อมกัน 💙`, tips: `ควรเปลี่ยนหน้ากากทุก 4-6 ชั่วโมง เพื่อประสิทธิภาพสูงสุด` },
+    2: { name: `Shopping Bag`, prophecy: `"วันนี้มีเกณฑ์ได้ของเพิ่มแบบไม่ตั้งใจ หรือมีเรื่องให้ต้องพกพาของมากกว่าปกติ"`, insight: `การถือของหลายชิ้นโดยไม่สมดุล อาจทำให้เกิดอาการปวดไหล่ ปวดหลัง หรือ Office Syndrome ได้`, reason: `Shopping Bag ช่วยกระจายน้ำหนัก ลดการเกร็งกล้ามเนื้อ`, summary: `ทำให้การเคลื่อนไหวของคุณสบายขึ้น 💙`, tips: `พยายามสะพายสลับข้าง เพื่อลดการกดทับด้านใดด้านหนึ่ง` },
+    3: { name: `สมุดโน้ต`, prophecy: `"วันนี้เป็นวันที่ไอเดียคุณไหลลื่น มีสิ่งใหม่ ๆ เข้ามาให้คิดและตัดสินใจ"`, insight: `การจดบันทึกช่วยลดความเครียดจากการพยายามจำหลายเรื่องพร้อมกัน`, reason: `จำไม่หมด จดลงสมุดดีกว่า`, summary: `ลดความเครียด และเพิ่มประสิทธิภาพในการทำงาน 💙`, tips: `ลองเขียน To-do list 3 อย่างหลักของวัน จะช่วยให้โฟกัสดีขึ้น` },
+    4: { name: `Gift Set`, prophecy: `"วันนี้เหมาะกับการส่งต่อความรู้สึกดี ๆ หรือสร้างความสัมพันธ์กับใครบางคน"`, insight: `การให้และการสร้างความสัมพันธ์ที่ดี ช่วยลดความเครียด และส่งผลดีต่อสุขภาพจิต`, reason: `Gift Set คือสื่อกลางของความใส่ใจ`, summary: `ช่วยให้ทั้ง 'ผู้ให้' และ 'ผู้รับ' รู้สึกดี 💙`, tips: `ลองเขียนโน้ตเล็ก ๆ แนบไป จะเพิ่มคุณค่าทางใจมากขึ้น` },
+    5: { name: `ทิชชูเปียก`, prophecy: `"วันนี้คุณมีเกณฑ์ต้องลุย เดินทาง หรือเจอสถานการณ์ที่ไม่สะดวกสบาย"`, insight: `การสัมผัสพื้นผิวสาธารณะ เช่น ราวจับ โต๊ะ หรือเงินสด อาจมีเชื้อโรคสะสม`, reason: `ทิชชูเปียกช่วยทำความสะอาดมือและพื้นผิวได้ทันที`, summary: `ลดความเสี่ยงในการสะสมเชื้อโรค 💙`, tips: `ควรเช็ดมือก่อนรับประทานอาหารทุกครั้ง` },
+    6: { name: `ทิชชูพกพา`, prophecy: `"วันนี้มีเรื่องเล็ก ๆ น้อย ๆ เข้ามาให้คุณต้องจัดการตลอดทั้งวัน"`, insight: `การรักษาความสะอาดเล็ก ๆ น้อย ๆ เช่น เช็ดเหงื่อ เช็ดสิ่งสกปรก ช่วยลดการสะสมของแบคทีเรีย`, reason: `ทิชชูแห้งคือไอเทมพื้นฐานที่ใช้ได้ทุกสถานการณ์`, summary: `ช่วยให้คุณพร้อมรับมือทุกเรื่องจุกจิก 💙`, tips: `พกติดตัวไว้เสมอ จะช่วยให้จัดการสถานการณ์ไม่คาดคิดได้ง่ายขึ้น` }
 };
- 
+
 const virtualItems = {
-    7: { name: `กำลังใจดีๆ`, prophecy: `\u201cวันนี้คุณมีพลังบวกเต็มเปี่ยม เหมาะกับการเริ่มต้นสิ่งใหม่\u201d`, insight: `สุขภาพใจที่ดีช่วยเสริมภูมิคุ้มกันร่างกายได้โดยตรง`, reason: `กำลังใจคือไอเทมที่อยู่กับคุณตลอดเวลา`, summary: `ทำให้คุณสดใสและพร้อมลุยทุกสถานการณ์ 💙`, tips: `ส่งต่อกำลังใจดีๆ ให้คนรอบตัว คุณจะได้รับกลับมาเป็นร้อยเท่า`, isVirtual: true },
-    8: { name: `รอยยิ้มสดใส`, prophecy: `\u201cวันนี้คุณจะมีโอกาสเจอผู้คนใหม่ๆ และสร้างความประทับใจ\u201d`, insight: `การยิ้มช่วยลดฮอร์โมนความเครียดและเพิ่มความสุข`, reason: `รอยยิ้มคือภาษาสากลที่เปิดประตูแห่งโอกาส`, summary: `ทำให้คุณดูน่าเข้าใกล้และมั่นใจมากขึ้น 💙`, tips: `ลองยิ้มทักทายคนแรกที่คุณเจอวันนี้ แล้วสังเกตผลลัพธ์`, isVirtual: true },
-    9: { name: `สมาธิจดจ่อ`, prophecy: `\u201cวันนี้เป็นวันที่คุณจะโฟกัสกับงานได้ดีเป็นพิเศษ\u201d`, insight: `สมาธิดีช่วยลดความผิดพลาดและเพิ่มประสิทธิภาพการทำงาน`, reason: `การมีสมาธิทำให้คุณทำงานเสร็จไวขึ้น ลดความเครียดสะสม`, summary: `ทำให้คุณทำงานได้อย่างมีประสิทธิภาพสูงสุด 💙`, tips: `ลองใช้เทคนิค Pomodoro 25 นาทีโฟกัส 5 นาทีพัก`, isVirtual: true }
+    7: { name: `กำลังใจดีๆ`, prophecy: `"วันนี้คุณมีพลังบวกเต็มเปี่ยม เหมาะกับการเริ่มต้นสิ่งใหม่"`, insight: `สุขภาพใจที่ดีช่วยเสริมภูมิคุ้มกันร่างกายได้โดยตรง`, reason: `กำลังใจคือไอเทมที่อยู่กับคุณตลอดเวลา`, summary: `ทำให้คุณสดใสและพร้อมลุยทุกสถานการณ์ 💙`, tips: `ส่งต่อกำลังใจดีๆ ให้คนรอบตัว คุณจะได้รับกลับมาเป็นร้อยเท่า`, isVirtual: true },
+    8: { name: `รอยยิ้มสดใส`, prophecy: `"วันนี้คุณจะมีโอกาสเจอผู้คนใหม่ๆ และสร้างความประทับใจ"`, insight: `การยิ้มช่วยลดฮอร์โมนความเครียดและเพิ่มความสุข`, reason: `รอยยิ้มคือภาษาสากลที่เปิดประตูแห่งโอกาส`, summary: `ทำให้คุณดูน่าเข้าใกล้และมั่นใจมากขึ้น 💙`, tips: `ลองยิ้มทักทายคนแรกที่คุณเจอวันนี้ แล้วสังเกตผลลัพธ์`, isVirtual: true },
+    9: { name: `สมาธิจดจ่อ`, prophecy: `"วันนี้เป็นวันที่คุณจะโฟกัสกับงานได้ดีเป็นพิเศษ"`, insight: `สมาธิดีช่วยลดความผิดพลาดและเพิ่มประสิทธิภาพการทำงาน`, reason: `การมีสมาธิทำให้คุณทำงานเสร็จไวขึ้น ลดความเครียดสะสม`, summary: `ทำให้คุณทำงานได้อย่างมีประสิทธิภาพสูงสุด 💙`, tips: `ลองใช้เทคนิค Pomodoro 25 นาทีโฟกัส 5 นาทีพัก`, isVirtual: true }
 };
- 
+
 function getItemData(id) {
     if (physicalItems[id]) return { ...physicalItems[id], isPhysical: true };
     if (virtualItems[id]) return { ...virtualItems[id], isPhysical: false };
     return null;
 }
- 
+
 function getStock() {
     const saved = localStorage.getItem('physical_stock');
     return saved ? JSON.parse(saved) : { 1: 10, 2: 9, 3: 8, 4: 7, 5: 6, 6: 5 };
 }
- 
+
 function saveStock(stock) { localStorage.setItem('physical_stock', JSON.stringify(stock)); }
- 
+
 function getAvailablePhysicalItems(stock) {
     return Object.keys(stock).filter(k => stock[k] > 0);
 }
- 
+
+// ==========================================
+// HISTORY
+// ==========================================
+function saveDrawHistory(itemId, itemName, isPhysical) {
+    const history = getDrawHistory();
+    history.push({
+        id: itemId,
+        name: itemName,
+        isPhysical: isPhysical,
+        time: Date.now()
+    });
+    localStorage.setItem('draw_history', JSON.stringify(history));
+}
+
+function getDrawHistory() {
+    const saved = localStorage.getItem('draw_history');
+    return saved ? JSON.parse(saved) : [];
+}
+
 function drawRandomItem() {
     const stock = getStock();
     const available = getAvailablePhysicalItems(stock);
@@ -761,64 +818,57 @@ function drawRandomItem() {
     const virtualIds = Object.keys(virtualItems).map(Number);
     return { id: virtualIds[Math.floor(Math.random() * virtualIds.length)], isPhysical: false };
 }
- 
+
+// ==========================================
+// MAIN LOGIC
+// ==========================================
 let isAnimating = false;
- 
-document.addEventListener('DOMContentLoaded', () => {
-    const saved = localStorage.getItem('seamsi_result');
-    if (saved) {
-        document.getElementById('cta-label').textContent = 'ดูผลการเสี่ยงทายของคุณ';
-    }
-});
- 
+
 function shakeCylinder() {
     if (isAnimating) return;
- 
-    const saved = localStorage.getItem('seamsi_result');
-    if (saved) {
-        const num = parseInt(saved);
-        if (getItemData(num)) { showResultModal(num); return; }
-        else localStorage.removeItem('seamsi_result');
-    }
- 
+
     isAnimating = true;
+    const btn = document.getElementById('cta-btn');
+    btn.disabled = true;
+
     const cylinder = document.getElementById('cylinder-container');
     const fallingStick = document.getElementById('falling-stick');
- 
+
     cylinder.classList.add('shake-active');
- 
+
     setTimeout(() => {
         cylinder.classList.remove('shake-active');
-        const { id: resultNumber } = drawRandomItem();
- 
+        const { id: resultNumber, isPhysical } = drawRandomItem();
+        const data = getItemData(resultNumber);
+
         document.getElementById('falling-number').textContent = resultNumber;
-        localStorage.setItem('seamsi_result', resultNumber);
-        localStorage.setItem('seamsi_timestamp', Date.now());
- 
+
+        // Save to history
+        if (data) saveDrawHistory(resultNumber, data.name, isPhysical);
+
         fallingStick.classList.add('stick-falling');
- 
+
         setTimeout(() => {
             showResultModal(resultNumber);
             setTimeout(() => {
                 fallingStick.classList.remove('stick-falling');
-                document.getElementById('cta-label').textContent = 'ดูผลการเสี่ยงทายของคุณ';
             }, 400);
         }, 1400);
     }, 1500);
 }
- 
+
 function showResultModal(number) {
     const data = getItemData(number);
     if (!data) return;
- 
+
     const isPhysical = data.isPhysical;
     document.getElementById('stock-warning').style.display = isPhysical ? 'none' : 'block';
- 
+
     const claimBtn = document.getElementById('claim-button');
     claimBtn.onclick = isPhysical
         ? () => { window.open('https://delivery.doubleapaper.com/', '_blank'); closeModal(); }
         : () => { alert('🎉 ไอเทมเสมือนนี้มอบให้คุณจากใจ ❤️ ขอให้มีความสุขตลอดวันนะคะ'); closeModal(); };
- 
+
     document.getElementById('res-number').textContent = number;
     document.getElementById('res-item-header').textContent = data.name;
     document.getElementById('res-item').textContent = data.name;
@@ -827,23 +877,77 @@ function showResultModal(number) {
     document.getElementById('res-reason').textContent = data.reason;
     document.getElementById('res-summary').textContent = data.summary;
     document.getElementById('res-tips').textContent = data.tips;
- 
+
     document.getElementById('overlay').classList.add('visible');
- 
+
     const modal = document.getElementById('result-modal');
     modal.style.display = 'flex';
     requestAnimationFrame(() => {
         requestAnimationFrame(() => modal.classList.add('visible'));
     });
 }
- 
+
 function closeModal() {
     const overlay = document.getElementById('overlay');
     const modal = document.getElementById('result-modal');
     overlay.classList.remove('visible');
     modal.classList.remove('visible');
-    setTimeout(() => { modal.style.display = 'none'; isAnimating = false; }, 400);
+    setTimeout(() => {
+        modal.style.display = 'none';
+        startCountdown();
+    }, 400);
 }
+
+// ==========================================
+// COUNTDOWN
+// ==========================================
+const CIRCUMFERENCE = 2 * Math.PI * 80; // 502.65
+
+function startCountdown() {
+    const cdOverlay = document.getElementById('countdown-overlay');
+    const numEl = document.getElementById('countdown-number');
+    const progressEl = document.getElementById('countdown-progress');
+
+    cdOverlay.classList.add('visible');
+
+    let count = 3;
+
+    function setCount(n) {
+        numEl.textContent = n;
+        numEl.classList.remove('pop');
+        void numEl.offsetWidth; // reflow
+        numEl.classList.add('pop');
+        // progress arc: full at n=3, empty at 0
+        const ratio = n / 3;
+        progressEl.style.strokeDashoffset = CIRCUMFERENCE * (1 - ratio);
+    }
+
+    setCount(count);
+
+    const interval = setInterval(() => {
+        count--;
+        if (count <= 0) {
+            clearInterval(interval);
+            progressEl.style.strokeDashoffset = CIRCUMFERENCE;
+            numEl.classList.remove('pop');
+            setTimeout(() => {
+                cdOverlay.classList.remove('visible');
+                isAnimating = false;
+                const btn = document.getElementById('cta-btn');
+                btn.disabled = false;
+                document.getElementById('cta-label').textContent = 'เขย่ากระบอก เสี่ยงทาย';
+            }, 300);
+        } else {
+            setCount(count);
+        }
+    }, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (!localStorage.getItem('physical_stock')) {
+        saveStock({ 1: 10, 2: 9, 3: 8, 4: 7, 5: 6, 6: 5 });
+    }
+});
 </script>
 </body>
 </html>
