@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=Itim&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
         :root {
             --blue-50: #EFF6FF;
             --blue-100: #DBEAFE;
@@ -27,14 +27,14 @@
             --slate-800: #1E293B;
             --gold: #F59E0B;
         }
- 
+
         body {
             font-family: 'Mitr', sans-serif;
             background: #EFF6FF;
             min-height: 100vh;
             position: relative;
         }
- 
+
         body::before {
             content: '';
             position: fixed;
@@ -43,7 +43,7 @@
             background: linear-gradient(135deg, var(--blue-800) 0%, var(--blue-900) 50%, var(--navy) 100%);
             z-index: 0;
         }
- 
+
         body::after {
             content: '';
             position: fixed;
@@ -52,7 +52,7 @@
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             z-index: 0;
         }
- 
+
         .page-wrapper {
             position: relative;
             z-index: 1;
@@ -60,13 +60,13 @@
             margin: 0 auto;
             padding: 40px 20px 60px;
         }
- 
+
         /* ---- HEADER ---- */
         .admin-header {
             text-align: center;
             padding-bottom: 48px;
         }
- 
+
         .admin-badge {
             display: inline-flex;
             align-items: center;
@@ -82,14 +82,14 @@
             border-radius: 20px;
             margin-bottom: 14px;
         }
- 
+
         .admin-badge::before {
             content: '';
             width: 6px; height: 6px;
             background: var(--gold);
             border-radius: 50%;
         }
- 
+
         .admin-header h1 {
             font-family: 'Itim', cursive;
             font-size: clamp(26px, 4vw, 36px);
@@ -97,13 +97,13 @@
             font-weight: 700;
             margin-bottom: 8px;
         }
- 
+
         .admin-header p {
             color: rgba(255,255,255,0.5);
             font-size: 13px;
             font-weight: 300;
         }
- 
+
         /* ---- CARD ---- */
         .card {
             background: white;
@@ -113,7 +113,7 @@
             margin-bottom: 16px;
             border: 1px solid var(--blue-100);
         }
- 
+
         .card-header {
             padding: 18px 24px;
             border-bottom: 1px solid var(--slate-100);
@@ -123,7 +123,7 @@
             flex-wrap: wrap;
             gap: 12px;
         }
- 
+
         .card-title {
             display: flex;
             align-items: center;
@@ -132,27 +132,28 @@
             font-weight: 600;
             color: var(--blue-900);
         }
- 
+
         .card-title-icon {
             width: 32px; height: 32px;
             border-radius: 8px;
             display: flex; align-items: center; justify-content: center;
             font-size: 15px;
         }
- 
+
         .card-title-icon.blue { background: var(--blue-50); }
         .card-title-icon.amber { background: #FFF8EB; }
         .card-title-icon.green { background: #ECFDF5; }
         .card-title-icon.purple { background: #F5F3FF; }
- 
+        .card-title-icon.rose { background: #FFF1F2; }
+
         .card-body { padding: 24px; }
- 
+
         /* ---- PIN SCREEN ---- */
         .pin-screen {
             text-align: center;
             padding: 52px 24px;
         }
- 
+
         .pin-lock-icon {
             width: 64px; height: 64px;
             background: var(--blue-50);
@@ -161,20 +162,20 @@
             margin: 0 auto 20px;
             border: 2px solid var(--blue-100);
         }
- 
+
         .pin-screen h2 {
             font-family: 'Itim', cursive;
             font-size: 22px;
             color: var(--blue-900);
             margin-bottom: 6px;
         }
- 
+
         .pin-screen p {
             color: var(--slate-400);
             font-size: 13px;
             margin-bottom: 28px;
         }
- 
+
         .pin-input {
             font-family: 'Mitr', sans-serif;
             font-size: 22px;
@@ -192,65 +193,26 @@
             display: block;
             margin: 0 auto 16px;
         }
- 
+
         .pin-input:focus {
             border-color: var(--blue-500);
             box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
         }
- 
+
         .pin-error {
             color: #EF4444;
             font-size: 12px;
             margin-top: 10px;
             display: none;
         }
- 
-        /* ---- PLAYER STATUS ---- */
-        .status-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
- 
-        .status-indicator {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
- 
-        .status-dot {
-            width: 10px; height: 10px;
-            border-radius: 50%;
-            margin-top: 4px;
-            flex-shrink: 0;
-        }
- 
-        .status-dot.green { background: #10B981; box-shadow: 0 0 0 3px rgba(16,185,129,0.2); }
-        .status-dot.amber { background: var(--gold); box-shadow: 0 0 0 3px rgba(245,158,11,0.2); }
- 
-        .status-text strong {
-            display: block;
-            font-size: 13px;
-            color: var(--slate-800);
-            margin-bottom: 2px;
-            font-weight: 600;
-        }
- 
-        .status-text span {
-            font-size: 12px;
-            color: var(--slate-400);
-            font-weight: 300;
-        }
- 
+
         /* ---- STOCK GRID ---- */
         .stock-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 12px;
         }
- 
+
         .stock-item {
             border: 1px solid var(--slate-200);
             border-radius: 14px;
@@ -258,22 +220,22 @@
             background: var(--slate-50);
             transition: border-color 0.2s;
         }
- 
+
         .stock-item:hover { border-color: var(--blue-200); }
- 
+
         .stock-item-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 12px;
         }
- 
+
         .stock-item-name {
             font-size: 13px;
             font-weight: 600;
             color: var(--slate-800);
         }
- 
+
         .stock-badge {
             font-size: 10px;
             font-weight: 600;
@@ -281,16 +243,16 @@
             padding: 2px 8px;
             border-radius: 6px;
         }
- 
+
         .stock-badge.in { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
         .stock-badge.out { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
- 
+
         .stock-controls {
             display: flex;
             align-items: center;
             gap: 10px;
         }
- 
+
         .qty-btn {
             width: 30px; height: 30px;
             border-radius: 8px;
@@ -304,14 +266,14 @@
             transition: all 0.15s;
             flex-shrink: 0;
         }
- 
+
         .qty-btn:hover:not(:disabled) {
             background: var(--blue-50);
             border-color: var(--blue-300);
         }
- 
+
         .qty-btn:disabled { opacity: 0.35; cursor: not-allowed; }
- 
+
         .qty-input {
             font-family: 'Mitr', sans-serif;
             font-size: 15px;
@@ -326,15 +288,15 @@
             outline: none;
             transition: border-color 0.2s;
         }
- 
+
         .qty-input:focus {
             border-color: var(--blue-400);
             box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
         }
- 
+
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button { opacity: 1; }
- 
+
         /* ---- STOCK FOOTER ---- */
         .stock-footer {
             margin-top: 20px;
@@ -346,13 +308,13 @@
             flex-wrap: wrap;
             gap: 12px;
         }
- 
+
         .total-display {
             display: flex;
             align-items: baseline;
             gap: 6px;
         }
- 
+
         .total-label { font-size: 12px; color: var(--slate-400); }
         .total-number {
             font-family: 'Itim', cursive;
@@ -361,13 +323,13 @@
             color: var(--blue-900);
         }
         .total-unit { font-size: 12px; color: var(--slate-400); }
- 
+
         .btn-row {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
         }
- 
+
         /* ---- BUTTONS ---- */
         .btn {
             font-family: 'Mitr', sans-serif;
@@ -383,42 +345,35 @@
             transition: all 0.2s;
             letter-spacing: 0.01em;
         }
- 
+
         .btn-primary {
             background: linear-gradient(135deg, var(--blue-600), var(--blue-800));
             color: white;
             box-shadow: 0 4px 12px rgba(37,99,235,0.3);
         }
         .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37,99,235,0.4); }
- 
-        .btn-amber {
-            background: linear-gradient(135deg, #F59E0B, #D97706);
-            color: white;
-            box-shadow: 0 4px 12px rgba(245,158,11,0.3);
-        }
-        .btn-amber:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(245,158,11,0.4); }
- 
+
         .btn-danger {
             background: #FEF2F2;
             color: #DC2626;
             border: 1px solid #FECACA;
         }
         .btn-danger:hover { background: #FEE2E2; }
- 
+
         .btn-ghost {
             background: var(--blue-50);
             color: var(--blue-700);
             border: 1px solid var(--blue-100);
         }
         .btn-ghost:hover { background: var(--blue-100); }
- 
+
         /* ---- VIRTUAL ITEMS ---- */
         .virtual-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 10px;
         }
- 
+
         .virtual-item {
             background: var(--blue-50);
             border: 1px solid var(--blue-100);
@@ -426,34 +381,11 @@
             padding: 16px;
             text-align: center;
         }
- 
+
         .virtual-item .icon { font-size: 26px; margin-bottom: 6px; }
         .virtual-item .name { font-size: 13px; font-weight: 600; color: var(--blue-900); margin-bottom: 4px; }
         .virtual-item .note { font-size: 10px; color: var(--slate-400); font-weight: 300; }
- 
-        /* ---- TIP BAR ---- */
-        .tip-bar {
-            background: white;
-            border: 1px solid var(--blue-100);
-            border-radius: 14px;
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 12px;
-            color: var(--slate-600);
-            margin-top: 6px;
-        }
- 
-        .tip-bar-icon {
-            width: 32px; height: 32px;
-            background: var(--blue-50);
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            font-size: 14px;
-        }
- 
+
         /* ---- STOCK WARNING ---- */
         .stock-out-alert {
             background: #FFF8EB;
@@ -465,7 +397,112 @@
             display: none;
             margin-top: 12px;
         }
- 
+
+        /* ---- HISTORY ---- */
+        .history-empty {
+            text-align: center;
+            padding: 32px 20px;
+            color: var(--slate-400);
+            font-size: 13px;
+        }
+
+        .history-empty .icon { font-size: 32px; margin-bottom: 10px; }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: 12px;
+            transition: border-color 0.2s;
+        }
+
+        .history-item:hover { border-color: var(--blue-200); }
+
+        .history-number {
+            font-family: 'Itim', cursive;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--blue-700);
+            min-width: 28px;
+            text-align: center;
+        }
+
+        .history-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .history-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--slate-800);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-time {
+            font-size: 11px;
+            color: var(--slate-400);
+            font-weight: 300;
+            margin-top: 2px;
+        }
+
+        .history-type-badge {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            padding: 2px 8px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .history-type-badge.physical {
+            background: #ECFDF5;
+            color: #065F46;
+            border: 1px solid #A7F3D0;
+        }
+
+        .history-type-badge.virtual {
+            background: #F5F3FF;
+            color: #5B21B6;
+            border: 1px solid #DDD6FE;
+        }
+
+        .history-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            border: 1px solid var(--slate-200);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 12px;
+            color: var(--slate-600);
+        }
+
+        .stat-pill strong {
+            font-family: 'Itim', cursive;
+            font-size: 18px;
+            color: var(--blue-900);
+        }
+
         /* ---- RESPONSIVE ---- */
         @media (max-width: 540px) {
             .card-header { flex-direction: column; align-items: flex-start; }
@@ -474,16 +511,16 @@
     </style>
 </head>
 <body>
- 
+
 <div class="page-wrapper">
- 
+
     <!-- Header -->
     <header class="admin-header">
         <div class="admin-badge">Admin Panel</div>
         <h1>Daily Oracle · Management</h1>
         <p>จัดการสต็อกและระบบเสี่ยงทาย</p>
     </header>
- 
+
     <!-- PIN Card -->
     <div class="card" id="pin-card">
         <div class="pin-screen">
@@ -495,7 +532,7 @@
             </div>
             <h2>ยืนยันตัวตน</h2>
             <p>กรอกรหัส PIN สำหรับทีมงานเท่านั้น</p>
-            <input type="password" id="pin-input" class="pin-input" maxlength="4" placeholder="····" onkeydown="if(event.key==='Enter')checkPin()">
+            <input type="password" id="pin-input" class="pin-input" maxlength="4" placeholder="····">
             <button class="btn btn-primary" onclick="checkPin()" style="margin: 0 auto;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 เข้าสู่ระบบ
@@ -503,39 +540,10 @@
             <p id="pin-error" class="pin-error">❌ รหัสไม่ถูกต้อง กรุณาลองอีกครั้ง</p>
         </div>
     </div>
- 
+
     <!-- Dashboard (hidden) -->
     <div id="admin-dashboard" style="display:none;">
- 
-        <!-- Player Status -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <div class="card-title-icon blue">👤</div>
-                    สถานะผู้เล่นปัจจุบัน
-                </div>
-                <button class="btn btn-amber" onclick="resetPlayer()">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                    รีเซ็ตให้คนถัดไปเล่น
-                </button>
-            </div>
-            <div class="card-body" style="padding-top:16px;padding-bottom:16px;">
-                <div class="status-row">
-                    <div class="status-indicator">
-                        <div class="status-dot green" id="status-dot"></div>
-                        <div class="status-text">
-                            <strong id="status-title">กำลังตรวจสอบ...</strong>
-                            <span id="status-detail"></span>
-                        </div>
-                    </div>
-                </div>
-                <div id="reset-success" style="display:none;margin-top:12px;" class="tip-bar">
-                    <div class="tip-bar-icon">✅</div>
-                    <span>รีเซ็ตเรียบร้อยแล้ว! แจ้งผู้เล่นคนถัดไปว่า "กดที่กระบอกเซียมซีได้เลย"</span>
-                </div>
-            </div>
-        </div>
- 
+
         <!-- Stock Management -->
         <div class="card">
             <div class="card-header">
@@ -568,7 +576,7 @@
                 </div>
             </div>
         </div>
- 
+
         <!-- Virtual Items -->
         <div class="card">
             <div class="card-header">
@@ -598,19 +606,37 @@
                 </div>
             </div>
         </div>
- 
-        <!-- Tip -->
-        <div class="tip-bar">
-            <div class="tip-bar-icon">💡</div>
-            <span>เคล็ดลับ: กด "รีเซ็ตให้คนถัดไป" หลังจากให้ไอเทมแล้ว แล้วแจ้งผู้เล่นคนใหม่ว่า "กดที่กระบอกเซียมซีได้เลย"</span>
+
+        <!-- Draw History -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="card-title-icon rose">🎋</div>
+                    ประวัติการสุ่ม
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-ghost" onclick="refreshHistory()">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                        รีเฟรช
+                    </button>
+                    <button class="btn btn-danger" onclick="clearHistory()">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                        ล้างประวัติ
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="history-stats" class="history-stats"></div>
+                <div id="history-container"></div>
+            </div>
         </div>
- 
+
     </div>
 </div>
- 
+
 <script>
 const ADMIN_PIN = "1234";
- 
+
 const itemNames = {
     1: "หน้ากากอนามัย",
     2: "Shopping Bag",
@@ -619,16 +645,21 @@ const itemNames = {
     5: "ทิชชูเปียก",
     6: "ทิชชูพกพา"
 };
- 
+
 const itemEmoji = { 1: "😷", 2: "🛍️", 3: "📓", 4: "🎁", 5: "🧻", 6: "📄" };
- 
+
 function getStock() {
     const saved = localStorage.getItem('physical_stock');
     return saved ? JSON.parse(saved) : { 1: 10, 2: 9, 3: 8, 4: 7, 5: 6, 6: 5 };
 }
- 
+
 function saveStock(stock) { localStorage.setItem('physical_stock', JSON.stringify(stock)); }
- 
+
+function getDrawHistory() {
+    const saved = localStorage.getItem('draw_history');
+    return saved ? JSON.parse(saved) : [];
+}
+
 function updateStock(itemId, newAmount) {
     const stock = getStock();
     const amount = parseInt(newAmount);
@@ -637,15 +668,15 @@ function updateStock(itemId, newAmount) {
     saveStock(stock);
     refreshStockDisplay();
 }
- 
+
 function refreshStockDisplay() {
     const stock = getStock();
     const container = document.getElementById('stock-list');
     if (!container) return;
- 
+
     container.innerHTML = '';
     let total = 0;
- 
+
     for (let i = 1; i <= 6; i++) {
         const amount = stock[i] || 0;
         total += amount;
@@ -664,53 +695,88 @@ function refreshStockDisplay() {
             </div>
         `;
     }
- 
+
     document.getElementById('total-stock').textContent = total;
     const alert = document.getElementById('stock-out-alert');
     if (alert) alert.style.display = total === 0 ? 'block' : 'none';
 }
- 
+
 function resetAllStock() {
     if (!confirm('รีเซ็ตสต็อกทั้งหมดกลับเป็นค่าตั้งต้น?')) return;
     saveStock({ 1: 10, 2: 9, 3: 8, 4: 7, 5: 6, 6: 5 });
     refreshStockDisplay();
 }
- 
-function resetPlayer() {
-    localStorage.removeItem('seamsi_result');
-    localStorage.removeItem('seamsi_timestamp');
-    const successEl = document.getElementById('reset-success');
-    successEl.style.display = 'flex';
-    setTimeout(() => { successEl.style.display = 'none'; }, 5000);
-    updatePlayerStatus();
+
+function clearHistory() {
+    if (!confirm('ล้างประวัติการสุ่มทั้งหมด?')) return;
+    localStorage.removeItem('draw_history');
+    refreshHistory();
 }
- 
-function updatePlayerStatus() {
-    const saved = localStorage.getItem('seamsi_result');
-    const dot = document.getElementById('status-dot');
-    const title = document.getElementById('status-title');
-    const detail = document.getElementById('status-detail');
- 
-    if (saved) {
-        const ts = localStorage.getItem('seamsi_timestamp');
-        const time = ts ? new Date(parseInt(ts)).toLocaleTimeString('th-TH') : 'ไม่ทราบเวลา';
-        dot.className = 'status-dot amber';
-        title.textContent = `มีผู้เล่นทำการสุ่มแล้ว (ไอเทม #${saved})`;
-        detail.textContent = `เมื่อ ${time} · ยังไม่สามารถสุ่มซ้ำได้`;
-    } else {
-        dot.className = 'status-dot green';
-        title.textContent = 'พร้อมให้ผู้เล่นใหม่เสี่ยงทาย';
-        detail.textContent = 'ยังไม่มีผู้เล่นคนไหนสุ่มในเซสชันนี้';
+
+function formatTime(ts) {
+    const d = new Date(ts);
+    return d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) +
+        ' · ' + d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
+}
+
+function refreshHistory() {
+    const history = getDrawHistory();
+    const statsEl = document.getElementById('history-stats');
+    const container = document.getElementById('history-container');
+
+    const physicalCount = history.filter(h => h.isPhysical).length;
+    const virtualCount = history.filter(h => !h.isPhysical).length;
+
+    statsEl.innerHTML = `
+        <div class="stat-pill">
+            <strong>${history.length}</strong>
+            <span>สุ่มทั้งหมด</span>
+        </div>
+        <div class="stat-pill">
+            <strong>${physicalCount}</strong>
+            <span>ของแจกจริง</span>
+        </div>
+        <div class="stat-pill">
+            <strong>${virtualCount}</strong>
+            <span>ไอเทมเสมือน</span>
+        </div>
+    `;
+
+    if (history.length === 0) {
+        container.innerHTML = `
+            <div class="history-empty">
+                <div class="icon">🎋</div>
+                <div>ยังไม่มีประวัติการสุ่ม</div>
+            </div>
+        `;
+        return;
     }
+
+    // Show newest first
+    const reversed = [...history].reverse();
+    container.innerHTML = `<div class="history-list">` +
+        reversed.map((entry, idx) => `
+            <div class="history-item">
+                <div class="history-number">${entry.id}</div>
+                <div class="history-info">
+                    <div class="history-name">${entry.name || 'ไอเทม #' + entry.id}</div>
+                    <div class="history-time">${formatTime(entry.time)}</div>
+                </div>
+                <div class="history-type-badge ${entry.isPhysical ? 'physical' : 'virtual'}">
+                    ${entry.isPhysical ? 'ของจริง' : 'เสมือน'}
+                </div>
+            </div>
+        `).join('') +
+    `</div>`;
 }
- 
+
 function checkPin() {
     const val = document.getElementById('pin-input').value;
     if (val === ADMIN_PIN) {
         document.getElementById('pin-card').style.display = 'none';
         document.getElementById('admin-dashboard').style.display = 'block';
         refreshStockDisplay();
-        updatePlayerStatus();
+        refreshHistory();
         if (!localStorage.getItem('physical_stock')) saveStock({ 1: 10, 2: 9, 3: 8, 4: 7, 5: 6, 6: 5 });
     } else {
         document.getElementById('pin-error').style.display = 'block';
@@ -719,7 +785,7 @@ function checkPin() {
         setTimeout(() => { document.getElementById('pin-error').style.display = 'none'; }, 3000);
     }
 }
- 
+
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pin-input').addEventListener('keydown', e => {
         if (e.key === 'Enter') checkPin();
