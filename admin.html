@@ -573,154 +573,111 @@ function getHistory() {
 }
 
 
-function clearHistory() {
-
-    if (!confirm('ล้างประวัติการสุ่มทั้งหมด?')) {
-        return;
-    }
-
-    localStorage.removeItem('draw_history');
-
-    renderHistory();
-
+async function loadHistoryFromFirebase() {
+    const historyRef = ref(db, 'history');
+    const snapshot = await get(historyRef);
+    const data = snapshot.val() || {};
+    
+    // แปลง Object เป็น Array
+    const historyArray = Object.values(data).sort((a, b) => b.ts - a.ts);
+    return historyArray;
 }
 
-
-function renderHistory() {
-
-    const history = getHistory();
-
+// แก้ไข function renderHistory
+async function renderHistory() {
     const listEl = document.getElementById('history-list');
-
     const chipsEl = document.getElementById('summary-chips');
-
+    
+    // ✅ โหลดจาก Firebase แทน localStorage
+    const history = await loadHistoryFromFirebase();
+    
     const counts = {};
-
     history.forEach(h => {
-
         const key = h.itemId;
-
         counts[key] = (counts[key] || 0) + 1;
-
     });
-
+    
     if (history.length === 0) {
-
         chipsEl.innerHTML = '';
-
-        listEl.innerHTML = `
-            <div class="history-empty">
-                📭 ยังไม่มีประวัติการสุ่ม
+        listEl.innerHTML = `<div class="history-empty">📭 ยังไม่มีประวัติการสุ่ม</div>`;
+        return;
+    }
+    
+    const allNames = { ...itemNames, ...virtualNames };
+    
+    chipsEl.innerHTML = Object.entries(counts)
+        .map(([id, cnt]) => `<div class="summary-chip"><strong>${cnt}</strong> ${allNames[id]}</div>`)
+        .join('');
+    
+    listEl.innerHTML = history.slice(0, 50).map(h => {
+        const name = allNames[h.itemId];
+        const time = new Date(h.ts).toLocaleTimeString('th-TH', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        const date = new Date(h.ts).toLocaleDateString('th-TH', {
+            day: 'numeric',
+            month: 'short'
+        });
+        const isV = !h.isPhysical;
+        
+        return `
+            <div class="history-row ${isV ? 'virtual' : ''}">
+                <div class="history-left">
+                    <div class="history-num ${isV ? 'virtual' : ''}">${h.itemId}</div>
+                    <div>
+                        <div class="history-name">${name}</div>
+                        <div class="history-time">${date} · ${time}</div>
+                    </div>
+                </div>
+                <span class="history-badge ${isV ? 'virtual' : 'physical'}">
+                    ${isV ? '✨ เสมือน' : '📦 จริง'}
+                </span>
             </div>
         `;
-
-        return;
-
-    }
-
-    const allNames = {
-        ...itemNames,
-        ...virtualNames
-    };
-
-    chipsEl.innerHTML = Object.entries(counts)
-        .map(([id, cnt]) => `
-            <div class="summary-chip">
-                <strong>${cnt}</strong>
-                ${allNames[id]}
-            </div>
-        `)
-        .join('');
-
-    listEl.innerHTML = [...history]
-        .reverse()
-        .map(h => {
-
-            const name = allNames[h.itemId];
-
-            const time = new Date(h.ts)
-                .toLocaleTimeString('th-TH', {
-                    hour:'2-digit',
-                    minute:'2-digit',
-                    second:'2-digit'
-                });
-
-            const date = new Date(h.ts)
-                .toLocaleDateString('th-TH', {
-                    day:'numeric',
-                    month:'short'
-                });
-
-            const isV = !h.isPhysical;
-
-            return `
-                <div class="history-row ${isV ? 'virtual' : ''}">
-
-                    <div class="history-left">
-
-                        <div class="history-num ${isV ? 'virtual' : ''}">
-                            ${h.itemId}
-                        </div>
-
-                        <div>
-
-                            <div class="history-name">
-                                ${name}
-                            </div>
-
-                            <div class="history-time">
-                                ${date} · ${time}
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <span class="history-badge ${isV ? 'virtual' : 'physical'}">
-                        ${isV ? '✨ เสมือน' : '📦 จริง'}
-                    </span>
-
-                </div>
-            `;
-
-        })
-        .join('');
-
+    }).join('');
 }
 
+// แก้ไข clearHistory ให้ลบทั้ง Firebase และ localStorage
+async function clearHistory() {
+    if (!confirm('ล้างประวัติการสุ่มทั้งหมด? (ไม่สามารถกู้คืนได้)')) return;
+    
+    // ✅ ลบใน Firebase
+    await set(ref(db, 'history'), null);
+    
+    // ลบใน localStorage
+    localStorage.removeItem('draw_history');
+    
+    // โหลดใหม่
+    await renderHistory();
+    alert('🗑️ ล้างประวัติเรียบร้อยแล้ว');
+}
 
-// ================= PIN =================
-
+// แก้ไข checkPin ให้โหลด history หลังจาก login
 function checkPin() {
     const val = document.getElementById('pin-input').value;
     if (val === ADMIN_PIN) {
         document.getElementById('pin-card').style.display = 'none';
         document.getElementById('admin-dashboard').style.display = 'block';
         
-        // โหลด stock ล่าสุดก่อน render
+        // โหลด stock
         const stockRef = ref(db, 'stock');
         get(stockRef).then((snapshot) => {
             currentStock = snapshot.val() || {};
             renderStockGrid(currentStock);
         });
         
+        // ✅ โหลด history
         renderHistory();
+        
     } else {
-
-        document.getElementById('pin-error')
-            .style.display = 'block';
-
+        document.getElementById('pin-error').style.display = 'block';
         document.getElementById('pin-input').value = '';
-
         setTimeout(() => {
-
-            document.getElementById('pin-error')
-                .style.display = 'none';
-
+            document.getElementById('pin-error').style.display = 'none';
         }, 3000);
-
     }
-
 }
 
 
