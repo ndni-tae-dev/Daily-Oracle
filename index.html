@@ -340,10 +340,17 @@ function getHistory() {
     const h = localStorage.getItem('draw_history');
     return h ? JSON.parse(h) : [];
 }
-function pushHistory(itemId, itemName, isPhysical) {
-    const h = getHistory();
-    h.push({ itemId, itemName, isPhysical, ts: Date.now() });
-    localStorage.setItem('draw_history', JSON.stringify(h));
+
+async function pushHistory(itemId, itemName, isPhysical) {
+
+    const id = Date.now();
+
+    await set(ref(db, `history/${id}`), {
+        itemId,
+        itemName,
+        isPhysical,
+        ts: Date.now()
+    });
 }
 
 async function drawRandomItem() {
