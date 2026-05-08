@@ -309,7 +309,7 @@ const virtualNames = { 7:"กำลังใจดีๆ", 8:"รอยยิ้
 
 // ---- STOCK (draft = pending changes) ----
 let draftStock = null; // null = no pending changes
-
+let currentStock = {};
 function markDirty() {
     document.getElementById('save-banner').classList.add('visible');
 }
