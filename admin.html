@@ -310,12 +310,6 @@ const virtualNames = { 7:"กำลังใจดีๆ", 8:"รอยยิ้
 // ---- STOCK (draft = pending changes) ----
 let draftStock = null; // null = no pending changes
 
-function getStock() {
-    const s = localStorage.getItem('physical_stock');
-    return s ? JSON.parse(s) : { 1:10, 2:9, 3:8, 4:7, 5:6, 6:5 };
-}
-function saveStock(s) { localStorage.setItem('physical_stock', JSON.stringify(s)); }
-
 function markDirty() {
     document.getElementById('save-banner').classList.add('visible');
 }
