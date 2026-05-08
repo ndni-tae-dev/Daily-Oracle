@@ -338,15 +338,25 @@ function getHistory() {
 }
 
 async function pushHistory(itemId, itemName, isPhysical) {
-
     const id = Date.now();
-
+    
+    // บันทึกลง Firebase
     await set(ref(db, `history/${id}`), {
         itemId,
         itemName,
         isPhysical,
         ts: Date.now()
     });
+    
+    // ✅ เพิ่ม: บันทึกลง localStorage ด้วย
+    const localHistory = getHistory();
+    localHistory.push({
+        itemId,
+        itemName,
+        isPhysical,
+        ts: Date.now()
+    });
+    localStorage.setItem('draw_history', JSON.stringify(localHistory));
 }
 
 async function drawRandomItem() {
