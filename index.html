@@ -320,6 +320,8 @@ function getItemData(id) {
     return null;
 }
 
+let currentStock = {};
+
 function getHistory() {
     const h = localStorage.getItem('draw_history');
     return h ? JSON.parse(h) : [];
