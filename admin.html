@@ -266,225 +266,504 @@
 </div>
 
     <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 import {
     getDatabase,
     ref,
     onValue,
-    runTransaction,
-    set,
-    get
+    set
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+
+// ================= FIREBASE =================
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDFfTuF4da3wzxqoqjBQnoJW_cZZs_-Hew",
-  authDomain: "aa-daily-oracle.firebaseapp.com",
-  databaseURL: "https://aa-daily-oracle-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "aa-daily-oracle",
-  storageBucket: "aa-daily-oracle.firebasestorage.app",
-  messagingSenderId: "701223323085",
-  appId: "1:701223323085:web:7fd2cb6d71971960daf084",
-  measurementId: "G-YRJRRDWST3"
+    apiKey: "AIzaSyDFfTuF4da3wzxqoqjBQnoJW_cZZs_-Hew",
+    authDomain: "aa-daily-oracle.firebaseapp.com",
+    databaseURL: "https://aa-daily-oracle-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "aa-daily-oracle",
+    storageBucket: "aa-daily-oracle.firebasestorage.app",
+    messagingSenderId: "701223323085",
+    appId: "1:701223323085:web:7fd2cb6d71971960daf084",
+    measurementId: "G-YRJRRDWST3"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-window.db = db;
-window.ref = ref;
-window.onValue = onValue;
-window.runTransaction = runTransaction;
-window.set = set;
-window.get = get;
-        
+
+// ================= CONFIG =================
+
 const ADMIN_PIN = "1234";
 
-const itemNames = { 1:"หน้ากากอนามัย", 2:"Shopping Bag", 3:"สมุดโน้ต", 4:"Gift Set", 5:"ทิชชูเปียก", 6:"ทิชชูพกพา" };
-const itemEmoji = { 1:"😷", 2:"🛍️", 3:"📓", 4:"🎁", 5:"🧻", 6:"📄" };
-const virtualNames = { 7:"กำลังใจดีๆ", 8:"รอยยิ้มสดใส", 9:"สมาธิจดจ่อ" };
+const itemNames = {
+    1:"หน้ากากอนามัย",
+    2:"Shopping Bag",
+    3:"สมุดโน้ต",
+    4:"Gift Set",
+    5:"ทิชชูเปียก",
+    6:"ทิชชูพกพา"
+};
 
-// ---- STOCK (draft = pending changes) ----
-let draftStock = null; // null = no pending changes
+const itemEmoji = {
+    1:"😷",
+    2:"🛍️",
+    3:"📓",
+    4:"🎁",
+    5:"🧻",
+    6:"📄"
+};
+
+const virtualNames = {
+    7:"กำลังใจดีๆ",
+    8:"รอยยิ้มสดใส",
+    9:"สมาธิจดจ่อ"
+};
+
+
+// ================= STOCK =================
+
 let currentStock = {};
+
+let draftStock = null;
+
 
 function listenStockRealtime() {
 
-const stockRef = ref(db, 'stock');
+    const stockRef = ref(db, 'stock');
 
-onValue(stockRef, (snapshot) => {
+    onValue(stockRef, (snapshot) => {
 
-currentStock = snapshot.val() || {};
+        currentStock = snapshot.val() || {};
 
-console.log("Realtime stock:", currentStock);
+        console.log("Realtime stock:", currentStock);
 
-});
+        if (!draftStock) {
+            renderStockGrid(currentStock);
+        }
 
-}
-        
-function markDirty() {
-    document.getElementById('save-banner').classList.add('visible');
-}
-
-function adjustDraft(itemId, delta) {
-    if (!draftStock) draftStock = getStock();
-    const cur = draftStock[itemId] || 0;
-    draftStock[itemId] = Math.max(0, cur + delta);
-    renderStockGrid(draftStock);
-    markDirty();
-}
-
-function setDraft(itemId, val) {
-    if (!draftStock) draftStock = getStock();
-    const n = parseInt(val);
-    if (isNaN(n) || n < 0) return;
-    draftStock[itemId] = n;
-    renderStockGrid(draftStock);
-    markDirty();
-}
-
-function saveStockChanges() {
-    if (!draftStock) return;
-    saveStock(draftStock);
-    draftStock = null;
-    document.getElementById('save-banner').classList.remove('visible');
-    // brief toast
-    const banner = document.getElementById('save-banner');
-    banner.innerHTML = `<span class="save-banner-text" style="color:#065F46;">✅ บันทึกสต็อกเรียบร้อยแล้ว!</span>`;
-    banner.style.background='#ECFDF5'; banner.style.borderColor='#A7F3D0';
-    banner.classList.add('visible');
-    setTimeout(() => {
-        banner.classList.remove('visible');
-        banner.style.background=''; banner.style.borderColor='';
-        banner.innerHTML = `
-            <span class="save-banner-text">⚠️ มีการเปลี่ยนแปลงสต็อก กรุณากด <strong>บันทึก</strong> เพื่อยืนยัน</span>
-            <div style="display:flex;gap:8px;">
-                <button class="btn btn-ghost" onclick="discardStockChanges()">ยกเลิก</button>
-                <button class="btn btn-green" onclick="saveStockChanges()">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                    บันทึก
-                </button>
-            </div>`;
-    }, 2000);
-}
-
-function discardStockChanges() {
-    draftStock = null;
-    document.getElementById('save-banner').classList.remove('visible');
-}
-
-function renderStockGrid(stock) {
-    const container = document.getElementById('stock-list');
-    if (!container) return;
-    let total = 0;
-    container.innerHTML = '';
-    for (let i = 1; i <= 6; i++) {
-        const amt = stock[i] || 0;
-        total += amt;
-        const has = amt > 0;
-        container.innerHTML += `
-            <div class="stock-item">
-                <div class="stock-item-header">
-                    <div class="stock-item-name">${itemEmoji[i]} ${itemNames[i]}</div>
-                    <div class="stock-badge ${has ? 'in' : 'out'}">${has ? 'มีสต็อก' : 'หมด'}</div>
-                </div>
-                <div class="stock-controls">
-                    <button class="qty-btn" onclick="adjustDraft(${i},-1)" ${amt<=0?'disabled':''}>−</button>
-                    <input type="number" class="qty-input" value="${amt}" min="0" onchange="setDraft(${i},this.value)">
-                    <button class="qty-btn" onclick="adjustDraft(${i},1)">+</button>
-                </div>
-            </div>`;
-    }
-    document.getElementById('total-stock').textContent = total;
-    const alert = document.getElementById('stock-out-alert');
-    if (alert) alert.style.display = total === 0 ? 'block' : 'none';
-}
-
-function resetAllStock() {
-    if (!confirm('รีเซ็ตสต็อกทั้งหมดกลับเป็นค่าตั้งต้น?')) return;
-    draftStock = null;
-    document.getElementById('save-banner').classList.remove('visible');
-    saveStock({ 1:10, 2:9, 3:8, 4:7, 5:6, 6:5 });
-}
-
-// ---- HISTORY ----
-function getHistory() {
-    const h = localStorage.getItem('draw_history');
-    return h ? JSON.parse(h) : [];
-}
-
-function clearHistory() {
-    if (!confirm('ล้างประวัติการสุ่มทั้งหมด?')) return;
-    localStorage.removeItem('draw_history');
-    renderHistory();
-}
-
-function renderHistory() {
-    const history = getHistory();
-    const listEl = document.getElementById('history-list');
-    const chipsEl = document.getElementById('summary-chips');
-
-    // Summary chips
-    const counts = {};
-    history.forEach(h => {
-        const key = h.itemId;
-        counts[key] = (counts[key] || 0) + 1;
     });
 
-    if (history.length === 0) {
-        chipsEl.innerHTML = '';
-        listEl.innerHTML = `<div class="history-empty">📭 ยังไม่มีประวัติการสุ่ม</div>`;
+}
+
+
+function markDirty() {
+
+    document.getElementById('save-banner')
+        .classList.add('visible');
+
+}
+
+
+function adjustDraft(itemId, delta) {
+
+    if (!draftStock) {
+        draftStock = { ...currentStock };
+    }
+
+    const cur = draftStock[itemId] || 0;
+
+    draftStock[itemId] = Math.max(0, cur + delta);
+
+    renderStockGrid(draftStock);
+
+    markDirty();
+
+}
+
+
+function setDraft(itemId, val) {
+
+    if (!draftStock) {
+        draftStock = { ...currentStock };
+    }
+
+    const n = parseInt(val);
+
+    if (isNaN(n) || n < 0) return;
+
+    draftStock[itemId] = n;
+
+    renderStockGrid(draftStock);
+
+    markDirty();
+
+}
+
+
+function saveStockChanges() {
+
+    if (!draftStock) return;
+
+    set(ref(db, 'stock'), draftStock);
+
+    currentStock = { ...draftStock };
+
+    renderStockGrid(currentStock);
+
+    draftStock = null;
+
+    const banner = document.getElementById('save-banner');
+
+    banner.innerHTML = `
+        <span class="save-banner-text" style="color:#065F46;">
+            ✅ บันทึกสต็อกเรียบร้อยแล้ว!
+        </span>
+    `;
+
+    banner.style.background = '#ECFDF5';
+
+    banner.style.borderColor = '#A7F3D0';
+
+    banner.classList.add('visible');
+
+    setTimeout(() => {
+
+        banner.classList.remove('visible');
+
+        banner.innerHTML = `
+            <span class="save-banner-text">
+                ⚠️ มีการเปลี่ยนแปลงสต็อก กรุณากด <strong>บันทึก</strong> เพื่อยืนยัน
+            </span>
+
+            <div style="display:flex;gap:8px;">
+
+                <button class="btn btn-ghost" onclick="discardStockChanges()">
+                    ยกเลิก
+                </button>
+
+                <button class="btn btn-green" onclick="saveStockChanges()">
+                    บันทึก
+                </button>
+
+            </div>
+        `;
+
+    }, 2000);
+
+}
+
+
+function discardStockChanges() {
+
+    draftStock = null;
+
+    document.getElementById('save-banner')
+        .classList.remove('visible');
+
+    renderStockGrid(currentStock);
+
+}
+
+
+function resetAllStock() {
+
+    if (!confirm('รีเซ็ตสต็อกทั้งหมดกลับเป็นค่าตั้งต้น?')) {
         return;
     }
 
-    // Chips
-    const allNames = { ...itemNames, ...virtualNames };
-    chipsEl.innerHTML = Object.entries(counts).map(([id, cnt]) => `
-        <div class="summary-chip">
-            <strong>${cnt}</strong> ${allNames[id] || `#${id}`}
-        </div>`).join('');
+    draftStock = null;
 
-    // Rows (newest first)
-    listEl.innerHTML = [...history].reverse().map((h, idx) => {
-        const name = allNames[h.itemId] || `ไอเทม #${h.itemId}`;
-        const time = new Date(h.ts).toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-        const date = new Date(h.ts).toLocaleDateString('th-TH', { day:'numeric', month:'short' });
-        const isV = !h.isPhysical;
-        return `
-        <div class="history-row ${isV ? 'virtual' : ''}">
-            <div class="history-left">
-                <div class="history-num ${isV ? 'virtual' : ''}">${h.itemId}</div>
-                <div>
-                    <div class="history-name">${name}</div>
-                    <div class="history-time">${date} · ${time}</div>
+    document.getElementById('save-banner')
+        .classList.remove('visible');
+
+    const defaultStock = {
+        1:10,
+        2:9,
+        3:8,
+        4:7,
+        5:6,
+        6:5
+    };
+
+    set(ref(db, 'stock'), defaultStock);
+
+    currentStock = defaultStock;
+
+    renderStockGrid(defaultStock);
+
+}
+
+
+function renderStockGrid(stock) {
+
+    const container = document.getElementById('stock-list');
+
+    if (!container) return;
+
+    let total = 0;
+
+    container.innerHTML = '';
+
+    for (let i = 1; i <= 6; i++) {
+
+        const amt = stock[i] || 0;
+
+        total += amt;
+
+        const has = amt > 0;
+
+        container.innerHTML += `
+            <div class="stock-item">
+
+                <div class="stock-item-header">
+
+                    <div class="stock-item-name">
+                        ${itemEmoji[i]} ${itemNames[i]}
+                    </div>
+
+                    <div class="stock-badge ${has ? 'in' : 'out'}">
+                        ${has ? 'มีสต็อก' : 'หมด'}
+                    </div>
+
                 </div>
+
+                <div class="stock-controls">
+
+                    <button
+                        class="qty-btn"
+                        onclick="adjustDraft(${i},-1)"
+                        ${amt <= 0 ? 'disabled' : ''}
+                    >
+                        −
+                    </button>
+
+                    <input
+                        type="number"
+                        class="qty-input"
+                        value="${amt}"
+                        min="0"
+                        onchange="setDraft(${i},this.value)"
+                    >
+
+                    <button
+                        class="qty-btn"
+                        onclick="adjustDraft(${i},1)"
+                    >
+                        +
+                    </button>
+
+                </div>
+
             </div>
-            <span class="history-badge ${isV ? 'virtual' : 'physical'}">${isV ? '✨ เสมือน' : '📦 จริง'}</span>
-        </div>`;
-    }).join('');
+        `;
+
+    }
+
+    document.getElementById('total-stock')
+        .textContent = total;
+
+    const alert = document.getElementById('stock-out-alert');
+
+    alert.style.display = total === 0
+        ? 'block'
+        : 'none';
+
 }
 
-// ---- PIN ----
-function checkPin() {
-    const val = document.getElementById('pin-input').value;
-    if (val === ADMIN_PIN) {
-        document.getElementById('pin-card').style.display = 'none';
-        document.getElementById('admin-dashboard').style.display = 'block';
-        if (!localStorage.getItem('physical_stock')) saveStock({ 1:10, 2:9, 3:8, 4:7, 5:6, 6:5 });
-        renderHistory();
-    } else {
-        document.getElementById('pin-error').style.display = 'block';
-        document.getElementById('pin-input').value = '';
-        document.getElementById('pin-input').focus();
-        setTimeout(() => { document.getElementById('pin-error').style.display = 'none'; }, 3000);
-    }
+
+// ================= HISTORY =================
+
+function getHistory() {
+
+    const h = localStorage.getItem('draw_history');
+
+    return h
+        ? JSON.parse(h)
+        : [];
+
 }
+
+
+function clearHistory() {
+
+    if (!confirm('ล้างประวัติการสุ่มทั้งหมด?')) {
+        return;
+    }
+
+    localStorage.removeItem('draw_history');
+
+    renderHistory();
+
+}
+
+
+function renderHistory() {
+
+    const history = getHistory();
+
+    const listEl = document.getElementById('history-list');
+
+    const chipsEl = document.getElementById('summary-chips');
+
+    const counts = {};
+
+    history.forEach(h => {
+
+        const key = h.itemId;
+
+        counts[key] = (counts[key] || 0) + 1;
+
+    });
+
+    if (history.length === 0) {
+
+        chipsEl.innerHTML = '';
+
+        listEl.innerHTML = `
+            <div class="history-empty">
+                📭 ยังไม่มีประวัติการสุ่ม
+            </div>
+        `;
+
+        return;
+
+    }
+
+    const allNames = {
+        ...itemNames,
+        ...virtualNames
+    };
+
+    chipsEl.innerHTML = Object.entries(counts)
+        .map(([id, cnt]) => `
+            <div class="summary-chip">
+                <strong>${cnt}</strong>
+                ${allNames[id]}
+            </div>
+        `)
+        .join('');
+
+    listEl.innerHTML = [...history]
+        .reverse()
+        .map(h => {
+
+            const name = allNames[h.itemId];
+
+            const time = new Date(h.ts)
+                .toLocaleTimeString('th-TH', {
+                    hour:'2-digit',
+                    minute:'2-digit',
+                    second:'2-digit'
+                });
+
+            const date = new Date(h.ts)
+                .toLocaleDateString('th-TH', {
+                    day:'numeric',
+                    month:'short'
+                });
+
+            const isV = !h.isPhysical;
+
+            return `
+                <div class="history-row ${isV ? 'virtual' : ''}">
+
+                    <div class="history-left">
+
+                        <div class="history-num ${isV ? 'virtual' : ''}">
+                            ${h.itemId}
+                        </div>
+
+                        <div>
+
+                            <div class="history-name">
+                                ${name}
+                            </div>
+
+                            <div class="history-time">
+                                ${date} · ${time}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <span class="history-badge ${isV ? 'virtual' : 'physical'}">
+                        ${isV ? '✨ เสมือน' : '📦 จริง'}
+                    </span>
+
+                </div>
+            `;
+
+        })
+        .join('');
+
+}
+
+
+// ================= PIN =================
+
+function checkPin() {
+
+    const val = document.getElementById('pin-input').value;
+
+    if (val === ADMIN_PIN) {
+
+        document.getElementById('pin-card')
+            .style.display = 'none';
+
+        document.getElementById('admin-dashboard')
+            .style.display = 'block';
+
+        renderHistory();
+
+        renderStockGrid(currentStock);
+
+    } else {
+
+        document.getElementById('pin-error')
+            .style.display = 'block';
+
+        document.getElementById('pin-input').value = '';
+
+        setTimeout(() => {
+
+            document.getElementById('pin-error')
+                .style.display = 'none';
+
+        }, 3000);
+
+    }
+
+}
+
+
+// ================= GLOBAL =================
+
+window.adjustDraft = adjustDraft;
+
+window.setDraft = setDraft;
+
+window.saveStockChanges = saveStockChanges;
+
+window.discardStockChanges = discardStockChanges;
+
+window.resetAllStock = resetAllStock;
+
+window.clearHistory = clearHistory;
+
+window.checkPin = checkPin;
+
+
+// ================= INIT =================
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('pin-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkPin(); });
-    if (!localStorage.getItem('physical_stock')) saveStock({ 1:10, 2:9, 3:8, 4:7, 5:6, 6:5 });
+
+    document.getElementById('pin-input')
+        .addEventListener('keydown', e => {
+
+            if (e.key === 'Enter') {
+                checkPin();
+            }
+
+        });
+
+    listenStockRealtime();
+
 });
 
-listenStockRealtime();
 </script>
 </body>
 </html>
