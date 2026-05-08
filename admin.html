@@ -337,16 +337,27 @@ function listenStockRealtime() {
 
     onValue(stockRef, (snapshot) => {
 
-        currentStock = snapshot.val() || {};
+        const data = snapshot.val() || [];
 
-        console.log("Realtime stock:", currentStock);
+        console.log("Realtime stock:", data);
 
-        if (!draftStock) {
-            renderStockGrid(currentStock);
+        const stockContainer = document.getElementById('stock-list');
+
+        stockContainer.innerHTML = '';
+
+        for (let i = 1; i <= 6; i++) {
+
+            const qty = data[i] || 0;
+
+            stockContainer.innerHTML += `
+                <div class="stock-card">
+                    <div>Item ${i}</div>
+                    <div>${qty}</div>
+                </div>
+            `;
         }
 
     });
-
 }
 
 
