@@ -759,24 +759,15 @@ window.clearHistory = clearHistory;
 window.checkPin = checkPin;
 
 
-// ================= INIT =================
-
 document.addEventListener('DOMContentLoaded', () => {
-
     document.getElementById('pin-input')
         .addEventListener('keydown', e => {
-
             if (e.key === 'Enter') {
                 checkPin();
             }
-
         });
-		
-	window.shakeCylinder = shakeCylinder;
-	window.closeModal = closeModal;
 
     listenStockRealtime();
-
 });
 
 </script>
