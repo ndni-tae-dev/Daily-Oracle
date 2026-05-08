@@ -268,7 +268,38 @@
     <div class="countdown-text">⏳ รอสักครู่ก่อนสุ่มครั้งถัดไป</div>
 </div>
 
-<script>
+    <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+    getDatabase,
+    ref,
+    onValue,
+    runTransaction,
+    set,
+    get
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDFfTuF4da3wzxqoqjBQnoJW_cZZs_-Hew",
+  authDomain: "aa-daily-oracle.firebaseapp.com",
+  databaseURL: "https://aa-daily-oracle-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "aa-daily-oracle",
+  storageBucket: "aa-daily-oracle.firebasestorage.app",
+  messagingSenderId: "701223323085",
+  appId: "1:701223323085:web:7fd2cb6d71971960daf084",
+  measurementId: "G-YRJRRDWST3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.db = db;
+window.ref = ref;
+window.onValue = onValue;
+window.runTransaction = runTransaction;
+window.set = set;
+window.get = get;
+        
 const physicalItems = {
     1:{ name:`หน้ากากอนามัย`, prophecy:`"วันนี้คุณมีเกณฑ์ต้องเจอคนเยอะ หรืออยู่ในพื้นที่แออัดโดยไม่ทันตั้งตัว"`, insight:`การอยู่ในที่คนหนาแน่นเพิ่มความเสี่ยงในการรับเชื้อโรคและฝุ่น PM2.5 โดยไม่รู้ตัว`, reason:`หน้ากากคือด่านแรกในการป้องกัน ทั้งฝุ่น แบคทีเรีย และกลิ่นไม่พึงประสงค์`, summary:`ช่วยให้คุณ "มั่นใจ" และ "ปลอดภัย" ไปพร้อมกัน 💙`, tips:`ควรเปลี่ยนหน้ากากทุก 4-6 ชั่วโมง เพื่อประสิทธิภาพสูงสุด` },
     2:{ name:`Shopping Bag`, prophecy:`"วันนี้มีเกณฑ์ได้ของเพิ่มแบบไม่ตั้งใจ หรือมีเรื่องให้ต้องพกพาของมากกว่าปกติ"`, insight:`การถือของหลายชิ้นโดยไม่สมดุล อาจทำให้เกิดอาการปวดไหล่ ปวดหลัง หรือ Office Syndrome ได้`, reason:`Shopping Bag ช่วยกระจายน้ำหนัก ลดการเกร็งกล้ามเนื้อ`, summary:`ทำให้การเคลื่อนไหวของคุณสบายขึ้น 💙`, tips:`พยายามสะพายสลับข้าง เพื่อลดการกดทับด้านใดด้านหนึ่ง` },
