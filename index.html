@@ -427,20 +427,29 @@ async function shakeCylinder() {
     const fallingStick = document.getElementById('falling-stick');
 
     cylinder.classList.add('shake-active');
-    setTimeout(() => {
-        cylinder.classList.remove('shake-active');
-        const { id } = await drawRandomItem();
-        const data = getItemData(id);
-        pushHistory(id, data.name, data.isPhysical);
+    setTimeout(async () => {
+    cylinder.classList.remove('shake-active');
 
-        document.getElementById('falling-number').textContent = id;
-        fallingStick.classList.add('stick-falling');
+    const { id } = await drawRandomItem();
+
+    const data = getItemData(id);
+
+    await pushHistory(id, data.name, data.isPhysical);
+
+    document.getElementById('falling-number').textContent = id;
+
+    fallingStick.classList.add('stick-falling');
+
+    setTimeout(() => {
+        showResultModal(id);
 
         setTimeout(() => {
-            showResultModal(id);
-            setTimeout(() => { fallingStick.classList.remove('stick-falling'); }, 400);
-        }, 1400);
-    }, 1500);
+            fallingStick.classList.remove('stick-falling');
+        }, 400);
+
+    }, 1400);
+
+}, 1500);
 }
 
 function showResultModal(number) {
