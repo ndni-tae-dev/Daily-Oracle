@@ -6,515 +6,153 @@
     <title>Admin · Daily Oracle</title>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=Itim&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
         :root {
-            --blue-50: #EFF6FF;
-            --blue-100: #DBEAFE;
-            --blue-200: #BFDBFE;
-            --blue-400: #60A5FA;
-            --blue-500: #3B82F6;
-            --blue-600: #2563EB;
-            --blue-700: #1D4ED8;
-            --blue-800: #1E40AF;
-            --blue-900: #1E3A8A;
-            --navy: #0F172A;
-            --slate-50: #F8FAFC;
-            --slate-100: #F1F5F9;
-            --slate-200: #E2E8F0;
-            --slate-400: #94A3B8;
-            --slate-600: #475569;
-            --slate-800: #1E293B;
-            --gold: #F59E0B;
+            --blue-50:#EFF6FF;--blue-100:#DBEAFE;--blue-200:#BFDBFE;--blue-400:#60A5FA;
+            --blue-500:#3B82F6;--blue-600:#2563EB;--blue-700:#1D4ED8;--blue-800:#1E40AF;
+            --blue-900:#1E3A8A;--navy:#0F172A;--slate-50:#F8FAFC;--slate-100:#F1F5F9;
+            --slate-200:#E2E8F0;--slate-400:#94A3B8;--slate-600:#475569;--slate-800:#1E293B;--gold:#F59E0B;
         }
+        body { font-family:'Mitr',sans-serif; background:#EFF6FF; min-height:100vh; position:relative; }
+        body::before { content:''; position:fixed; top:0; left:0; right:0; height:280px; background:linear-gradient(135deg,var(--blue-800) 0%,var(--blue-900) 50%,var(--navy) 100%); z-index:0; }
+        body::after { content:''; position:fixed; top:0; left:0; right:0; height:280px; background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); z-index:0; }
 
-        body {
-            font-family: 'Mitr', sans-serif;
-            background: #EFF6FF;
-            min-height: 100vh;
-            position: relative;
-        }
+        .page-wrapper { position:relative; z-index:1; max-width:860px; margin:0 auto; padding:40px 20px 60px; }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            height: 280px;
-            background: linear-gradient(135deg, var(--blue-800) 0%, var(--blue-900) 50%, var(--navy) 100%);
-            z-index: 0;
-        }
+        /* HEADER */
+        .admin-header { text-align:center; padding-bottom:48px; }
+        .admin-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.8); font-size:11px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; padding:5px 14px; border-radius:20px; margin-bottom:14px; }
+        .admin-badge::before { content:''; width:6px; height:6px; background:var(--gold); border-radius:50%; }
+        .admin-header h1 { font-family:'Itim',cursive; font-size:clamp(26px,4vw,36px); color:white; font-weight:700; margin-bottom:8px; }
+        .admin-header p { color:rgba(255,255,255,0.5); font-size:13px; font-weight:300; }
 
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            height: 280px;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            z-index: 0;
-        }
+        /* CARD */
+        .card { background:white; border-radius:20px; box-shadow:0 4px 24px rgba(30,58,138,0.08),0 1px 4px rgba(30,58,138,0.06); overflow:hidden; margin-bottom:16px; border:1px solid var(--blue-100); }
+        .card-header { padding:18px 24px; border-bottom:1px solid var(--slate-100); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+        .card-title { display:flex; align-items:center; gap:10px; font-size:15px; font-weight:600; color:var(--blue-900); }
+        .card-title-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; }
+        .card-title-icon.blue { background:var(--blue-50); }
+        .card-title-icon.amber { background:#FFF8EB; }
+        .card-title-icon.green { background:#ECFDF5; }
+        .card-title-icon.purple { background:#F5F3FF; }
+        .card-title-icon.rose { background:#FFF1F2; }
+        .card-body { padding:24px; }
 
-        .page-wrapper {
-            position: relative;
-            z-index: 1;
-            max-width: 860px;
-            margin: 0 auto;
-            padding: 40px 20px 60px;
-        }
+        /* PIN */
+        .pin-screen { text-align:center; padding:52px 24px; }
+        .pin-lock-icon { width:64px; height:64px; background:var(--blue-50); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; border:2px solid var(--blue-100); }
+        .pin-screen h2 { font-family:'Itim',cursive; font-size:22px; color:var(--blue-900); margin-bottom:6px; }
+        .pin-screen p { color:var(--slate-400); font-size:13px; margin-bottom:28px; }
+        .pin-input { font-family:'Mitr',sans-serif; font-size:22px; font-weight:600; letter-spacing:0.4em; text-align:center; width:180px; padding:12px 20px; border:2px solid var(--blue-200); border-radius:14px; color:var(--blue-900); background:var(--blue-50); outline:none; transition:border-color 0.2s; display:block; margin:0 auto 16px; }
+        .pin-input:focus { border-color:var(--blue-500); box-shadow:0 0 0 4px rgba(59,130,246,0.1); }
+        .pin-error { color:#EF4444; font-size:12px; margin-top:10px; display:none; }
 
-        /* ---- HEADER ---- */
-        .admin-header {
-            text-align: center;
-            padding-bottom: 48px;
-        }
+        /* STATUS */
+        .status-row { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+        .status-indicator { display:flex; align-items:flex-start; gap:12px; }
+        .status-dot { width:10px; height:10px; border-radius:50%; margin-top:4px; flex-shrink:0; }
+        .status-dot.green { background:#10B981; box-shadow:0 0 0 3px rgba(16,185,129,0.2); }
+        .status-dot.amber { background:var(--gold); box-shadow:0 0 0 3px rgba(245,158,11,0.2); }
+        .status-text strong { display:block; font-size:13px; color:var(--slate-800); margin-bottom:2px; font-weight:600; }
+        .status-text span { font-size:12px; color:var(--slate-400); font-weight:300; }
 
-        .admin-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.12);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.8);
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            padding: 5px 14px;
-            border-radius: 20px;
-            margin-bottom: 14px;
-        }
-
-        .admin-badge::before {
-            content: '';
-            width: 6px; height: 6px;
-            background: var(--gold);
-            border-radius: 50%;
-        }
-
-        .admin-header h1 {
-            font-family: 'Itim', cursive;
-            font-size: clamp(26px, 4vw, 36px);
-            color: white;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .admin-header p {
-            color: rgba(255,255,255,0.5);
-            font-size: 13px;
-            font-weight: 300;
-        }
-
-        /* ---- CARD ---- */
-        .card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 4px 24px rgba(30,58,138,0.08), 0 1px 4px rgba(30,58,138,0.06);
-            overflow: hidden;
-            margin-bottom: 16px;
-            border: 1px solid var(--blue-100);
-        }
-
-        .card-header {
-            padding: 18px 24px;
-            border-bottom: 1px solid var(--slate-100);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .card-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--blue-900);
-        }
-
-        .card-title-icon {
-            width: 32px; height: 32px;
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 15px;
-        }
-
-        .card-title-icon.blue { background: var(--blue-50); }
-        .card-title-icon.amber { background: #FFF8EB; }
-        .card-title-icon.green { background: #ECFDF5; }
-        .card-title-icon.purple { background: #F5F3FF; }
-        .card-title-icon.rose { background: #FFF1F2; }
-
-        .card-body { padding: 24px; }
-
-        /* ---- PIN SCREEN ---- */
-        .pin-screen {
-            text-align: center;
-            padding: 52px 24px;
-        }
-
-        .pin-lock-icon {
-            width: 64px; height: 64px;
-            background: var(--blue-50);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 20px;
-            border: 2px solid var(--blue-100);
-        }
-
-        .pin-screen h2 {
-            font-family: 'Itim', cursive;
-            font-size: 22px;
-            color: var(--blue-900);
-            margin-bottom: 6px;
-        }
-
-        .pin-screen p {
-            color: var(--slate-400);
-            font-size: 13px;
-            margin-bottom: 28px;
-        }
-
-        .pin-input {
-            font-family: 'Mitr', sans-serif;
-            font-size: 22px;
-            font-weight: 600;
-            letter-spacing: 0.4em;
-            text-align: center;
-            width: 180px;
-            padding: 12px 20px;
-            border: 2px solid var(--blue-200);
-            border-radius: 14px;
-            color: var(--blue-900);
-            background: var(--blue-50);
-            outline: none;
-            transition: border-color 0.2s;
-            display: block;
-            margin: 0 auto 16px;
-        }
-
-        .pin-input:focus {
-            border-color: var(--blue-500);
-            box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
-        }
-
-        .pin-error {
-            color: #EF4444;
-            font-size: 12px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        /* ---- STOCK GRID ---- */
-        .stock-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 12px;
-        }
-
-        .stock-item {
-            border: 1px solid var(--slate-200);
-            border-radius: 14px;
-            padding: 16px;
-            background: var(--slate-50);
-            transition: border-color 0.2s;
-        }
-
-        .stock-item:hover { border-color: var(--blue-200); }
-
-        .stock-item-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .stock-item-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--slate-800);
-        }
-
-        .stock-badge {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            padding: 2px 8px;
-            border-radius: 6px;
-        }
-
-        .stock-badge.in { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
-        .stock-badge.out { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
-
-        .stock-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .qty-btn {
-            width: 30px; height: 30px;
-            border-radius: 8px;
-            border: 1px solid var(--slate-200);
-            background: white;
-            color: var(--blue-700);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.15s;
-            flex-shrink: 0;
-        }
-
-        .qty-btn:hover:not(:disabled) {
-            background: var(--blue-50);
-            border-color: var(--blue-300);
-        }
-
-        .qty-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-
-        .qty-input {
-            font-family: 'Mitr', sans-serif;
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--blue-900);
-            text-align: center;
-            width: 52px;
-            padding: 6px 4px;
-            border: 1px solid var(--slate-200);
-            border-radius: 8px;
-            background: white;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .qty-input:focus {
-            border-color: var(--blue-400);
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
-        }
-
+        /* STOCK GRID */
+        .stock-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; }
+        .stock-item { border:1px solid var(--slate-200); border-radius:14px; padding:16px; background:var(--slate-50); transition:border-color 0.2s; }
+        .stock-item:hover { border-color:var(--blue-200); }
+        .stock-item-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+        .stock-item-name { font-size:13px; font-weight:600; color:var(--slate-800); }
+        .stock-badge { font-size:10px; font-weight:600; letter-spacing:0.06em; padding:2px 8px; border-radius:6px; }
+        .stock-badge.in { background:#ECFDF5; color:#065F46; border:1px solid #A7F3D0; }
+        .stock-badge.out { background:#FEF2F2; color:#991B1B; border:1px solid #FECACA; }
+        .stock-controls { display:flex; align-items:center; gap:10px; }
+        .qty-btn { width:30px; height:30px; border-radius:8px; border:1px solid var(--slate-200); background:white; color:var(--blue-700); font-size:16px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; flex-shrink:0; }
+        .qty-btn:hover:not(:disabled) { background:var(--blue-50); border-color:var(--blue-300); }
+        .qty-btn:disabled { opacity:0.35; cursor:not-allowed; }
+        .qty-input { font-family:'Mitr',sans-serif; font-size:15px; font-weight:600; color:var(--blue-900); text-align:center; width:52px; padding:6px 4px; border:1px solid var(--slate-200); border-radius:8px; background:white; outline:none; transition:border-color 0.2s; }
+        .qty-input:focus { border-color:var(--blue-400); box-shadow:0 0 0 3px rgba(59,130,246,0.1); }
         input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button { opacity: 1; }
+        input[type=number]::-webkit-outer-spin-button { opacity:1; }
 
-        /* ---- STOCK FOOTER ---- */
-        .stock-footer {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid var(--slate-100);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
+        /* SAVE BANNER */
+        .save-banner {
+            display:none; align-items:center; justify-content:space-between;
+            gap:12px; padding:12px 16px; margin-top:14px;
+            background:#FFF8EB; border:1px solid #FCD34D; border-radius:12px;
         }
+        .save-banner.visible { display:flex; }
+        .save-banner-text { font-size:12px; color:#92400E; }
 
-        .total-display {
-            display: flex;
-            align-items: baseline;
-            gap: 6px;
+        /* STOCK FOOTER */
+        .stock-footer { margin-top:20px; padding-top:16px; border-top:1px solid var(--slate-100); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+        .total-display { display:flex; align-items:baseline; gap:6px; }
+        .total-label { font-size:12px; color:var(--slate-400); }
+        .total-number { font-family:'Itim',cursive; font-size:28px; font-weight:700; color:var(--blue-900); }
+        .total-unit { font-size:12px; color:var(--slate-400); }
+        .btn-row { display:flex; gap:8px; flex-wrap:wrap; }
+
+        /* BUTTONS */
+        .btn { font-family:'Mitr',sans-serif; font-size:12px; font-weight:500; padding:9px 18px; border-radius:10px; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s; letter-spacing:0.01em; }
+        .btn-primary { background:linear-gradient(135deg,var(--blue-600),var(--blue-800)); color:white; box-shadow:0 4px 12px rgba(37,99,235,0.3); }
+        .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 16px rgba(37,99,235,0.4); }
+        .btn-amber { background:linear-gradient(135deg,#F59E0B,#D97706); color:white; box-shadow:0 4px 12px rgba(245,158,11,0.3); }
+        .btn-amber:hover { transform:translateY(-1px); box-shadow:0 6px 16px rgba(245,158,11,0.4); }
+        .btn-green { background:linear-gradient(135deg,#10B981,#059669); color:white; box-shadow:0 4px 12px rgba(16,185,129,0.3); }
+        .btn-green:hover { transform:translateY(-1px); box-shadow:0 6px 16px rgba(16,185,129,0.4); }
+        .btn-danger { background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; }
+        .btn-danger:hover { background:#FEE2E2; }
+        .btn-ghost { background:var(--blue-50); color:var(--blue-700); border:1px solid var(--blue-100); }
+        .btn-ghost:hover { background:var(--blue-100); }
+
+        /* VIRTUAL ITEMS */
+        .virtual-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; }
+        .virtual-item { background:var(--blue-50); border:1px solid var(--blue-100); border-radius:12px; padding:16px; text-align:center; }
+        .virtual-item .icon { font-size:26px; margin-bottom:6px; }
+        .virtual-item .name { font-size:13px; font-weight:600; color:var(--blue-900); margin-bottom:4px; }
+        .virtual-item .note { font-size:10px; color:var(--slate-400); font-weight:300; }
+
+        /* TIP BAR */
+        .tip-bar { background:white; border:1px solid var(--blue-100); border-radius:14px; padding:14px 20px; display:flex; align-items:center; gap:12px; font-size:12px; color:var(--slate-600); margin-top:6px; }
+        .tip-bar-icon { width:32px; height:32px; background:var(--blue-50); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; }
+
+        /* STOCK OUT ALERT */
+        .stock-out-alert { background:#FFF8EB; border:1px solid #FCD34D; border-radius:10px; padding:10px 14px; font-size:12px; color:#92400E; display:none; margin-top:12px; }
+
+        /* HISTORY */
+        .history-list { display:flex; flex-direction:column; gap:8px; max-height:320px; overflow-y:auto; }
+        .history-list::-webkit-scrollbar { width:4px; }
+        .history-list::-webkit-scrollbar-thumb { background:var(--blue-200); border-radius:4px; }
+        .history-row {
+            display:flex; align-items:center; justify-content:space-between;
+            background:var(--slate-50); border:1px solid var(--slate-200);
+            border-radius:10px; padding:10px 14px; gap:12px;
         }
-
-        .total-label { font-size: 12px; color: var(--slate-400); }
-        .total-number {
-            font-family: 'Itim', cursive;
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--blue-900);
+        .history-row.virtual { background:#F5F3FF; border-color:#DDD6FE; }
+        .history-left { display:flex; align-items:center; gap:10px; }
+        .history-num {
+            width:28px; height:28px; border-radius:8px;
+            background:var(--blue-100); color:var(--blue-800);
+            font-family:'Itim',cursive; font-size:14px; font-weight:700;
+            display:flex; align-items:center; justify-content:center; flex-shrink:0;
         }
-        .total-unit { font-size: 12px; color: var(--slate-400); }
+        .history-num.virtual { background:#EDE9FE; color:#5B21B6; }
+        .history-name { font-size:13px; font-weight:600; color:var(--slate-800); }
+        .history-time { font-size:11px; color:var(--slate-400); }
+        .history-badge { font-size:10px; font-weight:600; padding:2px 8px; border-radius:6px; white-space:nowrap; }
+        .history-badge.physical { background:#ECFDF5; color:#065F46; border:1px solid #A7F3D0; }
+        .history-badge.virtual { background:#EDE9FE; color:#5B21B6; border:1px solid #DDD6FE; }
+        .history-empty { text-align:center; padding:32px; color:var(--slate-400); font-size:13px; }
 
-        .btn-row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+        /* SUMMARY CHIPS */
+        .summary-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+        .summary-chip { display:flex; align-items:center; gap:5px; background:white; border:1px solid var(--slate-200); border-radius:10px; padding:6px 12px; font-size:12px; color:var(--slate-800); }
+        .summary-chip strong { font-size:16px; font-family:'Itim',cursive; color:var(--blue-900); }
 
-        /* ---- BUTTONS ---- */
-        .btn {
-            font-family: 'Mitr', sans-serif;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 9px 18px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            letter-spacing: 0.01em;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--blue-600), var(--blue-800));
-            color: white;
-            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
-        }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37,99,235,0.4); }
-
-        .btn-danger {
-            background: #FEF2F2;
-            color: #DC2626;
-            border: 1px solid #FECACA;
-        }
-        .btn-danger:hover { background: #FEE2E2; }
-
-        .btn-ghost {
-            background: var(--blue-50);
-            color: var(--blue-700);
-            border: 1px solid var(--blue-100);
-        }
-        .btn-ghost:hover { background: var(--blue-100); }
-
-        /* ---- VIRTUAL ITEMS ---- */
-        .virtual-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 10px;
-        }
-
-        .virtual-item {
-            background: var(--blue-50);
-            border: 1px solid var(--blue-100);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-        }
-
-        .virtual-item .icon { font-size: 26px; margin-bottom: 6px; }
-        .virtual-item .name { font-size: 13px; font-weight: 600; color: var(--blue-900); margin-bottom: 4px; }
-        .virtual-item .note { font-size: 10px; color: var(--slate-400); font-weight: 300; }
-
-        /* ---- STOCK WARNING ---- */
-        .stock-out-alert {
-            background: #FFF8EB;
-            border: 1px solid #FCD34D;
-            border-radius: 10px;
-            padding: 10px 14px;
-            font-size: 12px;
-            color: #92400E;
-            display: none;
-            margin-top: 12px;
-        }
-
-        /* ---- HISTORY ---- */
-        .history-empty {
-            text-align: center;
-            padding: 32px 20px;
-            color: var(--slate-400);
-            font-size: 13px;
-        }
-
-        .history-empty .icon { font-size: 32px; margin-bottom: 10px; }
-
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .history-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 14px;
-            background: var(--slate-50);
-            border: 1px solid var(--slate-200);
-            border-radius: 12px;
-            transition: border-color 0.2s;
-        }
-
-        .history-item:hover { border-color: var(--blue-200); }
-
-        .history-number {
-            font-family: 'Itim', cursive;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--blue-700);
-            min-width: 28px;
-            text-align: center;
-        }
-
-        .history-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .history-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--slate-800);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .history-time {
-            font-size: 11px;
-            color: var(--slate-400);
-            font-weight: 300;
-            margin-top: 2px;
-        }
-
-        .history-type-badge {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            padding: 2px 8px;
-            border-radius: 6px;
-            flex-shrink: 0;
-        }
-
-        .history-type-badge.physical {
-            background: #ECFDF5;
-            color: #065F46;
-            border: 1px solid #A7F3D0;
-        }
-
-        .history-type-badge.virtual {
-            background: #F5F3FF;
-            color: #5B21B6;
-            border: 1px solid #DDD6FE;
-        }
-
-        .history-stats {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .stat-pill {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: white;
-            border: 1px solid var(--slate-200);
-            border-radius: 10px;
-            padding: 8px 14px;
-            font-size: 12px;
-            color: var(--slate-600);
-        }
-
-        .stat-pill strong {
-            font-family: 'Itim', cursive;
-            font-size: 18px;
-            color: var(--blue-900);
-        }
-
-        /* ---- RESPONSIVE ---- */
-        @media (max-width: 540px) {
-            .card-header { flex-direction: column; align-items: flex-start; }
-            .stock-footer { flex-direction: column; }
-        }
+        @media(max-width:540px) { .card-header{flex-direction:column;align-items:flex-start} .stock-footer{flex-direction:column} }
     </style>
 </head>
 <body>
-
 <div class="page-wrapper">
-
-    <!-- Header -->
     <header class="admin-header">
         <div class="admin-badge">Admin Panel</div>
         <h1>Daily Oracle · Management</h1>
@@ -533,7 +171,7 @@
             <h2>ยืนยันตัวตน</h2>
             <p>กรอกรหัส PIN สำหรับทีมงานเท่านั้น</p>
             <input type="password" id="pin-input" class="pin-input" maxlength="4" placeholder="····">
-            <button class="btn btn-primary" onclick="checkPin()" style="margin: 0 auto;">
+            <button class="btn btn-primary" onclick="checkPin()" style="margin:0 auto;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 เข้าสู่ระบบ
             </button>
@@ -541,8 +179,26 @@
         </div>
     </div>
 
-    <!-- Dashboard (hidden) -->
+    <!-- Dashboard -->
     <div id="admin-dashboard" style="display:none;">
+
+        <!-- Draw History -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="card-title-icon rose">📋</div>
+                    ประวัติการสุ่ม
+                </div>
+                <button class="btn btn-danger" onclick="clearHistory()">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                    ล้างประวัติ
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="summary-chips" class="summary-chips"></div>
+                <div id="history-list" class="history-list"></div>
+            </div>
+        </div>
 
         <!-- Stock Management -->
         <div class="card">
@@ -567,6 +223,17 @@
                 <div id="stock-out-alert" class="stock-out-alert">
                     ⚠️ <strong>เตือน:</strong> ของแจกจริงหมดแล้ว ผู้เล่นจะได้รับไอเทมเสมือนแทน
                 </div>
+                <!-- Save banner -->
+                <div class="save-banner" id="save-banner">
+                    <span class="save-banner-text">⚠️ มีการเปลี่ยนแปลงสต็อก กรุณากด <strong>บันทึก</strong> เพื่อยืนยัน</span>
+                    <div style="display:flex;gap:8px;">
+                        <button class="btn btn-ghost" onclick="discardStockChanges()">ยกเลิก</button>
+                        <button class="btn btn-green" onclick="saveStockChanges()">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            บันทึก
+                        </button>
+                    </div>
+                </div>
                 <div class="stock-footer">
                     <div class="total-display">
                         <span class="total-label">คงเหลือรวม</span>
@@ -588,196 +255,194 @@
             <div class="card-body">
                 <p style="font-size:12px;color:var(--slate-400);margin-bottom:14px;font-weight:300;">เมื่อของแจกจริงหมด ระบบจะสุ่มไอเทมเหล่านี้ให้อัตโนมัติ</p>
                 <div class="virtual-grid">
-                    <div class="virtual-item">
-                        <div class="icon">💪</div>
-                        <div class="name">กำลังใจดีๆ</div>
-                        <div class="note">ไม่มีสต็อกจำกัด</div>
-                    </div>
-                    <div class="virtual-item">
-                        <div class="icon">😊</div>
-                        <div class="name">รอยยิ้มสดใส</div>
-                        <div class="note">ไม่มีสต็อกจำกัด</div>
-                    </div>
-                    <div class="virtual-item">
-                        <div class="icon">🧘</div>
-                        <div class="name">สมาธิจดจ่อ</div>
-                        <div class="note">ไม่มีสต็อกจำกัด</div>
-                    </div>
+                    <div class="virtual-item"><div class="icon">💪</div><div class="name">กำลังใจดีๆ</div><div class="note">ไม่มีสต็อกจำกัด</div></div>
+                    <div class="virtual-item"><div class="icon">😊</div><div class="name">รอยยิ้มสดใส</div><div class="note">ไม่มีสต็อกจำกัด</div></div>
+                    <div class="virtual-item"><div class="icon">🧘</div><div class="name">สมาธิจดจ่อ</div><div class="note">ไม่มีสต็อกจำกัด</div></div>
                 </div>
             </div>
         </div>
 
-        <!-- Draw History -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <div class="card-title-icon rose">🎋</div>
-                    ประวัติการสุ่ม
-                </div>
-                <div class="btn-row">
-                    <button class="btn btn-ghost" onclick="refreshHistory()">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                        รีเฟรช
-                    </button>
-                    <button class="btn btn-danger" onclick="clearHistory()">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-                        ล้างประวัติ
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div id="history-stats" class="history-stats"></div>
-                <div id="history-container"></div>
-            </div>
+        <div class="tip-bar">
+            <div class="tip-bar-icon">💡</div>
+            <span>เคล็ดลับ: ผู้เล่นจะมี countdown 3 วินาทีก่อนสุ่มได้อีกครั้ง และสต็อกจะลดลงทุกครั้งที่สุ่ม</span>
         </div>
-
     </div>
 </div>
 
 <script>
 const ADMIN_PIN = "1234";
 
-const itemNames = {
-    1: "หน้ากากอนามัย",
-    2: "Shopping Bag",
-    3: "สมุดโน้ต",
-    4: "Gift Set",
-    5: "ทิชชูเปียก",
-    6: "ทิชชูพกพา"
-};
+const itemNames = { 1:"หน้ากากอนามัย", 2:"Shopping Bag", 3:"สมุดโน้ต", 4:"Gift Set", 5:"ทิชชูเปียก", 6:"ทิชชูพกพา" };
+const itemEmoji = { 1:"😷", 2:"🛍️", 3:"📓", 4:"🎁", 5:"🧻", 6:"📄" };
+const virtualNames = { 7:"กำลังใจดีๆ", 8:"รอยยิ้มสดใส", 9:"สมาธิจดจ่อ" };
 
-const itemEmoji = { 1: "😷", 2: "🛍️", 3: "📓", 4: "🎁", 5: "🧻", 6: "📄" };
+// ---- STOCK (draft = pending changes) ----
+let draftStock = null; // null = no pending changes
 
 function getStock() {
-    const saved = localStorage.getItem('physical_stock');
-    return saved ? JSON.parse(saved) : { 1: 10, 2: 9, 3: 8, 4: 7, 5: 6, 6: 5 };
+    const s = localStorage.getItem('physical_stock');
+    return s ? JSON.parse(s) : { 1:10, 2:9, 3:8, 4:7, 5:6, 6:5 };
+}
+function saveStock(s) { localStorage.setItem('physical_stock', JSON.stringify(s)); }
+
+function markDirty() {
+    document.getElementById('save-banner').classList.add('visible');
 }
 
-function saveStock(stock) { localStorage.setItem('physical_stock', JSON.stringify(stock)); }
-
-function getDrawHistory() {
-    const saved = localStorage.getItem('draw_history');
-    return saved ? JSON.parse(saved) : [];
+function adjustDraft(itemId, delta) {
+    if (!draftStock) draftStock = getStock();
+    const cur = draftStock[itemId] || 0;
+    draftStock[itemId] = Math.max(0, cur + delta);
+    renderStockGrid(draftStock);
+    markDirty();
 }
 
-function updateStock(itemId, newAmount) {
-    const stock = getStock();
-    const amount = parseInt(newAmount);
-    if (isNaN(amount) || amount < 0) return;
-    stock[itemId] = amount;
-    saveStock(stock);
+function setDraft(itemId, val) {
+    if (!draftStock) draftStock = getStock();
+    const n = parseInt(val);
+    if (isNaN(n) || n < 0) return;
+    draftStock[itemId] = n;
+    renderStockGrid(draftStock);
+    markDirty();
+}
+
+function saveStockChanges() {
+    if (!draftStock) return;
+    saveStock(draftStock);
+    draftStock = null;
+    document.getElementById('save-banner').classList.remove('visible');
+    refreshStockDisplay();
+    // brief toast
+    const banner = document.getElementById('save-banner');
+    banner.innerHTML = `<span class="save-banner-text" style="color:#065F46;">✅ บันทึกสต็อกเรียบร้อยแล้ว!</span>`;
+    banner.style.background='#ECFDF5'; banner.style.borderColor='#A7F3D0';
+    banner.classList.add('visible');
+    setTimeout(() => {
+        banner.classList.remove('visible');
+        banner.style.background=''; banner.style.borderColor='';
+        banner.innerHTML = `
+            <span class="save-banner-text">⚠️ มีการเปลี่ยนแปลงสต็อก กรุณากด <strong>บันทึก</strong> เพื่อยืนยัน</span>
+            <div style="display:flex;gap:8px;">
+                <button class="btn btn-ghost" onclick="discardStockChanges()">ยกเลิก</button>
+                <button class="btn btn-green" onclick="saveStockChanges()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    บันทึก
+                </button>
+            </div>`;
+    }, 2000);
+}
+
+function discardStockChanges() {
+    draftStock = null;
+    document.getElementById('save-banner').classList.remove('visible');
     refreshStockDisplay();
 }
 
-function refreshStockDisplay() {
-    const stock = getStock();
+function renderStockGrid(stock) {
     const container = document.getElementById('stock-list');
     if (!container) return;
-
-    container.innerHTML = '';
     let total = 0;
-
+    container.innerHTML = '';
     for (let i = 1; i <= 6; i++) {
-        const amount = stock[i] || 0;
-        total += amount;
-        const hasStock = amount > 0;
+        const amt = stock[i] || 0;
+        total += amt;
+        const has = amt > 0;
         container.innerHTML += `
             <div class="stock-item">
                 <div class="stock-item-header">
                     <div class="stock-item-name">${itemEmoji[i]} ${itemNames[i]}</div>
-                    <div class="stock-badge ${hasStock ? 'in' : 'out'}">${hasStock ? 'มีสต็อก' : 'หมด'}</div>
+                    <div class="stock-badge ${has ? 'in' : 'out'}">${has ? 'มีสต็อก' : 'หมด'}</div>
                 </div>
                 <div class="stock-controls">
-                    <button class="qty-btn" onclick="updateStock(${i}, ${amount - 1})" ${amount <= 0 ? 'disabled' : ''}>−</button>
-                    <input type="number" class="qty-input" id="stock-${i}" value="${amount}" min="0" onchange="updateStock(${i}, this.value)">
-                    <button class="qty-btn" onclick="updateStock(${i}, ${amount + 1})">+</button>
+                    <button class="qty-btn" onclick="adjustDraft(${i},-1)" ${amt<=0?'disabled':''}>−</button>
+                    <input type="number" class="qty-input" value="${amt}" min="0" onchange="setDraft(${i},this.value)">
+                    <button class="qty-btn" onclick="adjustDraft(${i},1)">+</button>
                 </div>
-            </div>
-        `;
+            </div>`;
     }
-
     document.getElementById('total-stock').textContent = total;
     const alert = document.getElementById('stock-out-alert');
     if (alert) alert.style.display = total === 0 ? 'block' : 'none';
 }
 
+function refreshStockDisplay() {
+    renderStockGrid(draftStock || getStock());
+}
+
 function resetAllStock() {
     if (!confirm('รีเซ็ตสต็อกทั้งหมดกลับเป็นค่าตั้งต้น?')) return;
-    saveStock({ 1: 10, 2: 9, 3: 8, 4: 7, 5: 6, 6: 5 });
+    draftStock = null;
+    document.getElementById('save-banner').classList.remove('visible');
+    saveStock({ 1:10, 2:9, 3:8, 4:7, 5:6, 6:5 });
     refreshStockDisplay();
+}
+
+// ---- HISTORY ----
+function getHistory() {
+    const h = localStorage.getItem('draw_history');
+    return h ? JSON.parse(h) : [];
 }
 
 function clearHistory() {
     if (!confirm('ล้างประวัติการสุ่มทั้งหมด?')) return;
     localStorage.removeItem('draw_history');
-    refreshHistory();
+    renderHistory();
 }
 
-function formatTime(ts) {
-    const d = new Date(ts);
-    return d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) +
-        ' · ' + d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
-}
+function renderHistory() {
+    const history = getHistory();
+    const listEl = document.getElementById('history-list');
+    const chipsEl = document.getElementById('summary-chips');
 
-function refreshHistory() {
-    const history = getDrawHistory();
-    const statsEl = document.getElementById('history-stats');
-    const container = document.getElementById('history-container');
-
-    const physicalCount = history.filter(h => h.isPhysical).length;
-    const virtualCount = history.filter(h => !h.isPhysical).length;
-
-    statsEl.innerHTML = `
-        <div class="stat-pill">
-            <strong>${history.length}</strong>
-            <span>สุ่มทั้งหมด</span>
-        </div>
-        <div class="stat-pill">
-            <strong>${physicalCount}</strong>
-            <span>ของแจกจริง</span>
-        </div>
-        <div class="stat-pill">
-            <strong>${virtualCount}</strong>
-            <span>ไอเทมเสมือน</span>
-        </div>
-    `;
+    // Summary chips
+    const counts = {};
+    history.forEach(h => {
+        const key = h.itemId;
+        counts[key] = (counts[key] || 0) + 1;
+    });
 
     if (history.length === 0) {
-        container.innerHTML = `
-            <div class="history-empty">
-                <div class="icon">🎋</div>
-                <div>ยังไม่มีประวัติการสุ่ม</div>
-            </div>
-        `;
+        chipsEl.innerHTML = '';
+        listEl.innerHTML = `<div class="history-empty">📭 ยังไม่มีประวัติการสุ่ม</div>`;
         return;
     }
 
-    // Show newest first
-    const reversed = [...history].reverse();
-    container.innerHTML = `<div class="history-list">` +
-        reversed.map((entry, idx) => `
-            <div class="history-item">
-                <div class="history-number">${entry.id}</div>
-                <div class="history-info">
-                    <div class="history-name">${entry.name || 'ไอเทม #' + entry.id}</div>
-                    <div class="history-time">${formatTime(entry.time)}</div>
-                </div>
-                <div class="history-type-badge ${entry.isPhysical ? 'physical' : 'virtual'}">
-                    ${entry.isPhysical ? 'ของจริง' : 'เสมือน'}
+    // Chips
+    const allNames = { ...itemNames, ...virtualNames };
+    chipsEl.innerHTML = Object.entries(counts).map(([id, cnt]) => `
+        <div class="summary-chip">
+            <strong>${cnt}</strong> ${allNames[id] || `#${id}`}
+        </div>`).join('');
+
+    // Rows (newest first)
+    listEl.innerHTML = [...history].reverse().map((h, idx) => {
+        const name = allNames[h.itemId] || `ไอเทม #${h.itemId}`;
+        const time = new Date(h.ts).toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+        const date = new Date(h.ts).toLocaleDateString('th-TH', { day:'numeric', month:'short' });
+        const isV = !h.isPhysical;
+        return `
+        <div class="history-row ${isV ? 'virtual' : ''}">
+            <div class="history-left">
+                <div class="history-num ${isV ? 'virtual' : ''}">${h.itemId}</div>
+                <div>
+                    <div class="history-name">${name}</div>
+                    <div class="history-time">${date} · ${time}</div>
                 </div>
             </div>
-        `).join('') +
-    `</div>`;
+            <span class="history-badge ${isV ? 'virtual' : 'physical'}">${isV ? '✨ เสมือน' : '📦 จริง'}</span>
+        </div>`;
+    }).join('');
 }
 
+// ---- PIN ----
 function checkPin() {
     const val = document.getElementById('pin-input').value;
     if (val === ADMIN_PIN) {
         document.getElementById('pin-card').style.display = 'none';
         document.getElementById('admin-dashboard').style.display = 'block';
+        if (!localStorage.getItem('physical_stock')) saveStock({ 1:10, 2:9, 3:8, 4:7, 5:6, 6:5 });
         refreshStockDisplay();
-        refreshHistory();
-        if (!localStorage.getItem('physical_stock')) saveStock({ 1: 10, 2: 9, 3: 8, 4: 7, 5: 6, 6: 5 });
+        renderHistory();
     } else {
         document.getElementById('pin-error').style.display = 'block';
         document.getElementById('pin-input').value = '';
@@ -787,10 +452,8 @@ function checkPin() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('pin-input').addEventListener('keydown', e => {
-        if (e.key === 'Enter') checkPin();
-    });
-    if (!localStorage.getItem('physical_stock')) saveStock({ 1: 10, 2: 9, 3: 8, 4: 7, 5: 6, 6: 5 });
+    document.getElementById('pin-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkPin(); });
+    if (!localStorage.getItem('physical_stock')) saveStock({ 1:10, 2:9, 3:8, 4:7, 5:6, 6:5 });
 });
 </script>
 </body>
