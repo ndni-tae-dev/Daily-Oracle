@@ -346,23 +346,73 @@ function pushHistory(itemId, itemName, isPhysical) {
     localStorage.setItem('draw_history', JSON.stringify(h));
 }
 
-function drawRandomItem() {
-    const stock = getStock();
-    const avail = Object.keys(stock).filter(k => stock[k] > 0);
-    if (avail.length > 0) {
-        const id = parseInt(avail[Math.floor(Math.random() * avail.length)]);
-        stock[id]--;
-        saveStock(stock);
-        return { id, isPhysical:true };
+async function drawRandomItem() {
+
+    const stockIds = [1,2,3,4,5,6];
+
+    // โหลด stock ล่าสุดจาก firebase
+    const snapshot = await get(ref(db, 'stock'));
+
+    const stock = snapshot.val() || {};
+
+    // หา item ที่ยังเหลือ
+    const available = stockIds.filter(id => (stock[id] || 0) > 0);
+
+    // ถ้าของหมด
+    if (available.length === 0) {
+
+        const virtualIds = [7,8,9];
+
+        return {
+            id: virtualIds[
+                Math.floor(Math.random() * virtualIds.length)
+            ],
+            isPhysical:false
+        };
     }
-    const vIds = Object.keys(virtualItems).map(Number);
-    return { id: vIds[Math.floor(Math.random() * vIds.length)], isPhysical:false };
+
+    // สุ่ม item
+    const selectedId =
+        available[
+            Math.floor(Math.random() * available.length)
+        ];
+
+    const stockRef = ref(db, `stock/${selectedId}`);
+
+    // transaction
+    const result = await runTransaction(stockRef, (currentStock) => {
+
+        // ไม่มีข้อมูล
+        if (currentStock === null) {
+            return 0;
+        }
+
+        // กันติดลบ
+        if (currentStock <= 0) {
+            return;
+        }
+
+        // ลด stock
+        return currentStock - 1;
+    });
+
+    // ถ้ามีคนกดตัดหน้า
+    if (!result.committed) {
+
+        return await drawRandomItem();
+
+    }
+
+    return {
+        id:selectedId,
+        isPhysical:true
+    };
 }
 
 let isAnimating = false;
 let countdownTimer = null;
 
-function shakeCylinder() {
+async function shakeCylinder() {
     if (isAnimating) return;
     isAnimating = true;
 
@@ -372,7 +422,7 @@ function shakeCylinder() {
     cylinder.classList.add('shake-active');
     setTimeout(() => {
         cylinder.classList.remove('shake-active');
-        const { id } = drawRandomItem();
+        const { id } = await drawRandomItem();
         const data = getItemData(id);
         pushHistory(id, data.name, data.isPhysical);
 
