@@ -208,10 +208,6 @@
                     จัดการสต็อกของแจกจริง
                 </div>
                 <div class="btn-row">
-                    <button class="btn btn-ghost" onclick="refreshStockDisplay()">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                        รีเฟรช
-                    </button>
                     <button class="btn btn-danger" onclick="resetAllStock()">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
                         รีเซ็ตสต็อก
@@ -351,7 +347,6 @@ function saveStockChanges() {
     saveStock(draftStock);
     draftStock = null;
     document.getElementById('save-banner').classList.remove('visible');
-    refreshStockDisplay();
     // brief toast
     const banner = document.getElementById('save-banner');
     banner.innerHTML = `<span class="save-banner-text" style="color:#065F46;">✅ บันทึกสต็อกเรียบร้อยแล้ว!</span>`;
@@ -375,7 +370,6 @@ function saveStockChanges() {
 function discardStockChanges() {
     draftStock = null;
     document.getElementById('save-banner').classList.remove('visible');
-    refreshStockDisplay();
 }
 
 function renderStockGrid(stock) {
@@ -405,16 +399,11 @@ function renderStockGrid(stock) {
     if (alert) alert.style.display = total === 0 ? 'block' : 'none';
 }
 
-function refreshStockDisplay() {
-    renderStockGrid(draftStock || getStock());
-}
-
 function resetAllStock() {
     if (!confirm('รีเซ็ตสต็อกทั้งหมดกลับเป็นค่าตั้งต้น?')) return;
     draftStock = null;
     document.getElementById('save-banner').classList.remove('visible');
     saveStock({ 1:10, 2:9, 3:8, 4:7, 5:6, 6:5 });
-    refreshStockDisplay();
 }
 
 // ---- HISTORY ----
@@ -481,7 +470,6 @@ function checkPin() {
         document.getElementById('pin-card').style.display = 'none';
         document.getElementById('admin-dashboard').style.display = 'block';
         if (!localStorage.getItem('physical_stock')) saveStock({ 1:10, 2:9, 3:8, 4:7, 5:6, 6:5 });
-        refreshStockDisplay();
         renderHistory();
     } else {
         document.getElementById('pin-error').style.display = 'block';
