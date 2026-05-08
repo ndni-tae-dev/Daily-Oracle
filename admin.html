@@ -269,7 +269,38 @@
     </div>
 </div>
 
-<script>
+    <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+    getDatabase,
+    ref,
+    onValue,
+    runTransaction,
+    set,
+    get
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDFfTuF4da3wzxqoqjBQnoJW_cZZs_-Hew",
+  authDomain: "aa-daily-oracle.firebaseapp.com",
+  databaseURL: "https://aa-daily-oracle-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "aa-daily-oracle",
+  storageBucket: "aa-daily-oracle.firebasestorage.app",
+  messagingSenderId: "701223323085",
+  appId: "1:701223323085:web:7fd2cb6d71971960daf084",
+  measurementId: "G-YRJRRDWST3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.db = db;
+window.ref = ref;
+window.onValue = onValue;
+window.runTransaction = runTransaction;
+window.set = set;
+window.get = get;
+        
 const ADMIN_PIN = "1234";
 
 const itemNames = { 1:"หน้ากากอนามัย", 2:"Shopping Bag", 3:"สมุดโน้ต", 4:"Gift Set", 5:"ทิชชูเปียก", 6:"ทิชชูพกพา" };
