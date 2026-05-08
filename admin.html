@@ -495,6 +495,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pin-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkPin(); });
     if (!localStorage.getItem('physical_stock')) saveStock({ 1:10, 2:9, 3:8, 4:7, 5:6, 6:5 });
 });
+
+listenStockRealtime();
 </script>
 </body>
 </html>
