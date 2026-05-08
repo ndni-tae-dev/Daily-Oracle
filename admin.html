@@ -332,34 +332,18 @@ let draftStock = null;
 
 
 function listenStockRealtime() {
-
     const stockRef = ref(db, 'stock');
-
     onValue(stockRef, (snapshot) => {
-
-        const data = snapshot.val() || [];
-
-        console.log("Realtime stock:", data);
-
-        const stockContainer = document.getElementById('stock-list');
-
-        stockContainer.innerHTML = '';
-
-        for (let i = 1; i <= 6; i++) {
-
-            const qty = data[i] || 0;
-
-            stockContainer.innerHTML += `
-                <div class="stock-card">
-                    <div>Item ${i}</div>
-                    <div>${qty}</div>
-                </div>
-            `;
+        const data = snapshot.val() || {};
+        console.log("Realtime stock from Firebase:", data);
+        currentStock = data;
+        
+        // ถ้า stock-list มีอยู่ (หลังจาก login) ให้ re-render
+        if (document.getElementById('stock-list')) {
+            renderStockGrid(currentStock);
         }
-
     });
 }
-
 
 function markDirty() {
 
@@ -708,21 +692,19 @@ function renderHistory() {
 // ================= PIN =================
 
 function checkPin() {
-
     const val = document.getElementById('pin-input').value;
-
     if (val === ADMIN_PIN) {
-
-        document.getElementById('pin-card')
-            .style.display = 'none';
-
-        document.getElementById('admin-dashboard')
-            .style.display = 'block';
-
+        document.getElementById('pin-card').style.display = 'none';
+        document.getElementById('admin-dashboard').style.display = 'block';
+        
+        // โหลด stock ล่าสุดก่อน render
+        const stockRef = ref(db, 'stock');
+        get(stockRef).then((snapshot) => {
+            currentStock = snapshot.val() || {};
+            renderStockGrid(currentStock);
+        });
+        
         renderHistory();
-
-        renderStockGrid(currentStock);
-
     } else {
 
         document.getElementById('pin-error')
