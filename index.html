@@ -324,17 +324,12 @@ function getItemData(id) {
 let currentStock = {};
 
 function listenStockRealtime() {
-
-const stockRef = ref(db, 'stock');
-
-onValue(stockRef, (snapshot) => {
-
-currentStock = snapshot.val() || {};
-
-console.log("Realtime stock:", currentStock);
-
-});
-
+    const stockRef = ref(db, 'stock');
+    onValue(stockRef, (snapshot) => {
+        currentStock = snapshot.val() || {};
+        console.log("Realtime stock:", currentStock);
+        // ไม่ต้องไปยุ่งกับ stock-list เพราะไม่มีในหน้า User
+    });
 }
 
 function getHistory() {
