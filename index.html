@@ -322,6 +322,20 @@ function getItemData(id) {
 
 let currentStock = {};
 
+function listenStockRealtime() {
+
+const stockRef = ref(db, 'stock');
+
+onValue(stockRef, (snapshot) => {
+
+currentStock = snapshot.val() || {};
+
+console.log("Realtime stock:", currentStock);
+
+});
+
+}
+
 function getHistory() {
     const h = localStorage.getItem('draw_history');
     return h ? JSON.parse(h) : [];
