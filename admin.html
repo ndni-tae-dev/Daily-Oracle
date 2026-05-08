@@ -274,9 +274,9 @@ import {
     getDatabase,
     ref,
     onValue,
-    set
+    set,
+    get  // ✅ เพิ่มตรงนี้
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
 
 // ================= FIREBASE =================
 
@@ -334,11 +334,22 @@ let draftStock = null;
 function listenStockRealtime() {
     const stockRef = ref(db, 'stock');
     onValue(stockRef, (snapshot) => {
-        const data = snapshot.val() || {};
+        let data = snapshot.val() || {};
+        
+        // 🔧 แก้ไข: ถ้า data เป็น Array ให้แปลงเป็น Object
+        if (Array.isArray(data)) {
+            const objData = {};
+            for (let i = 0; i < data.length; i++) {
+                if (data[i] !== undefined && data[i] !== null) {
+                    objData[i] = data[i];
+                }
+            }
+            data = objData;
+        }
+        
         console.log("Realtime stock from Firebase:", data);
         currentStock = data;
         
-        // ถ้า stock-list มีอยู่ (หลังจาก login) ให้ re-render
         if (document.getElementById('stock-list')) {
             renderStockGrid(currentStock);
         }
@@ -639,11 +650,10 @@ async function renderHistory() {
     }).join('');
 }
 
-// แก้ไข clearHistory ให้ลบทั้ง Firebase และ localStorage
 async function clearHistory() {
     if (!confirm('ล้างประวัติการสุ่มทั้งหมด? (ไม่สามารถกู้คืนได้)')) return;
     
-    // ✅ ลบใน Firebase
+    // ลบใน Firebase
     await set(ref(db, 'history'), null);
     
     // ลบใน localStorage
@@ -654,22 +664,33 @@ async function clearHistory() {
     alert('🗑️ ล้างประวัติเรียบร้อยแล้ว');
 }
 
-// แก้ไข checkPin ให้โหลด history หลังจาก login
-function checkPin() {
+async function checkPin() {
     const val = document.getElementById('pin-input').value;
     if (val === ADMIN_PIN) {
         document.getElementById('pin-card').style.display = 'none';
         document.getElementById('admin-dashboard').style.display = 'block';
         
-        // โหลด stock
+        // โหลด stock แบบ async/await
         const stockRef = ref(db, 'stock');
-        get(stockRef).then((snapshot) => {
-            currentStock = snapshot.val() || {};
-            renderStockGrid(currentStock);
-        });
+        const snapshot = await get(stockRef);
+        let stockData = snapshot.val() || {};
         
-        // ✅ โหลด history
-        renderHistory();
+        // แปลง Array เป็น Object ถ้าจำเป็น
+        if (Array.isArray(stockData)) {
+            const objData = {};
+            for (let i = 0; i < stockData.length; i++) {
+                if (stockData[i] !== undefined && stockData[i] !== null) {
+                    objData[i] = stockData[i];
+                }
+            }
+            stockData = objData;
+        }
+        
+        currentStock = stockData;
+        renderStockGrid(currentStock);
+        
+        // โหลด history
+        await renderHistory();
         
     } else {
         document.getElementById('pin-error').style.display = 'block';
