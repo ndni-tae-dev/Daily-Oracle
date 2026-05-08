@@ -154,7 +154,7 @@
         <p>สุ่มไอเทมเพื่อรับคำแนะนำสำหรับวันนี้ของคุณ</p>
     </header>
 
-    <div class="oracle-wrapper" id="oracle-wrapper" onclick="shakeCylinder()">
+    <div class="oracle-wrapper" id="oracle-wrapper">
         <div class="oracle-glow"></div>
         <div id="falling-stick" class="falling-stick">
             <div class="stick-inner">
@@ -198,7 +198,7 @@
 
     <div class="divider">แตะเพื่อเสี่ยงทาย</div>
 
-    <button class="cta-button" id="cta-btn" onclick="shakeCylinder()">
+    <button class="cta-button" id="cta-btn">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
         </svg>
@@ -543,7 +543,20 @@ function startCountdown() {
     }, 1000);
 }
 
-window.shakeCylinder = shakeCylinder;
+document.addEventListener('DOMContentLoaded', () => {
+
+    // click cylinder
+    document
+        .getElementById('oracle-wrapper')
+        .addEventListener('click', shakeCylinder);
+
+    // click button
+    document
+        .getElementById('cta-btn')
+        .addEventListener('click', shakeCylinder);
+
+});
+
 window.closeModal = closeModal;
 
 listenStockRealtime();
