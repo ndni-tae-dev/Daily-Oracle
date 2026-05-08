@@ -319,11 +319,6 @@ function getItemData(id) {
     if (virtualItems[id]) return { ...virtualItems[id], isPhysical:false };
     return null;
 }
-function getStock() {
-    const s = localStorage.getItem('physical_stock');
-    return s ? JSON.parse(s) : { 1:10, 2:9, 3:8, 4:7, 5:6, 6:5 };
-}
-function saveStock(s) { localStorage.setItem('physical_stock', JSON.stringify(s)); }
 
 function getHistory() {
     const h = localStorage.getItem('draw_history');
